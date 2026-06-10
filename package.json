@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
+    "dev": "concurrently -k -n \"next,watch\" -c \"cyan,magenta\" \"next dev --turbopack\" \"tsx scripts/watch-content.ts\"",
+    "build": "tsx scripts/watch-content.ts --once && next build",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write ."
@@ -29,12 +29,14 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^10.0.3",
     "eslint": "^9",
     "eslint-config-next": "^15.0.0",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4",
+    "tsx": "^4.22.4",
     "typescript": "^5"
   }
 }
