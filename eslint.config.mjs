@@ -10,12 +10,7 @@ const eslintConfig = defineConfig([
   ...compat.extends("next/core-web-vitals"),
   ...compat.extends("next/typescript"),
   // Override default ignores of eslint-config-next.
-  globalIgnores([
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-  ]),
+  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
   eslintConfigPrettier,
 ]);
 
