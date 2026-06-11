@@ -1,58 +1,58 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
+import { TopInfoBar } from "@/components/TopInfoBar";
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
+  preload: true,
+  fallback: ["system-ui", "arial"],
 });
 
+const SITE_URL = "https://rishibuilds.vercel.app";
+const SITE_TITLE = "Rishi Chaurasia - Full-Stack Developer";
+const SITE_DESCRIPTION =
+  "Portfolio of Rishi Chaurasia - AI engineer, full-stack web developer";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://rishibuilds.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Rishi Chaurasia | Full-Stack Developer & AI Engineer",
+    default: SITE_TITLE,
     template: "%s | Rishi Chaurasia",
   },
-  description:
-    "Full-stack developer specializing in scalable web applications. Explore my projects, hackathon wins, and technical expertise in modern frameworks.",
+  description: SITE_DESCRIPTION,
   keywords: [
     "Rishi Chaurasia",
-    "Rishi Chaurasia Portfolio",
-    "Rishi Builds",
-    "AI Developer",
-    "Software Developer",
-    "Full Stack Engineer",
-    "Web Development",
-    "React",
+    "AI Engineer",
+    "Full-Stack Developer",
+    "Machine Learning",
     "Next.js",
-    "Portfolio website",
+    "React",
+    "TypeScript",
+    "Python",
+    "Portfolio",
+    "Mumbai",
   ],
-  authors: [{ name: "Rishi Chaurasia", url: "https://rishibuilds.vercel.app" }],
+  authors: [{ name: "Rishi Chaurasia", url: SITE_URL }],
   creator: "Rishi Chaurasia",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://rishibuilds.vercel.app",
-    title: "Rishi Chaurasia | Full-Stack Developer & AI Engineer",
-    description:
-      "Full-stack developer specializing in scalable web applications. Explore my projects, hackathon wins, and technical expertise in modern frameworks.",
-    siteName: "Rishi Chaurasia Portfolio",
-    images: [
-      {
-        url: "/icons/open-graph.png",
-        width: 1200,
-        height: 630,
-        alt: "Rishi Chaurasia | Full-Stack Developer & AI Engineer Portfolio",
-      },
-    ],
+    url: SITE_URL,
+    siteName: "rishichaurasia.dev",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rishi Chaurasia | Full-Stack Developer & AI Engineer",
-    description:
-      "Full-stack developer specializing in scalable web applications. Explore my projects, hackathon wins, and technical expertise in modern frameworks.",
-    images: ["/icons/open-graph.png"],
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    creator: "@rishitwts_",
   },
   robots: {
     index: true,
@@ -66,33 +66,110 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://rishibuilds.vercel.app",
+    canonical: SITE_URL,
   },
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/site.webmanifest",
+  category: "technology",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1a1a1f" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
+function JsonLd() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${SITE_URL}/#website`,
+        name: "Rishi Chaurasia Portfolio",
+        url: SITE_URL,
+        description: SITE_DESCRIPTION,
+        inLanguage: "en-US",
+        potentialAction: {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: `${SITE_URL}/projects?q={search_term_string}`,
+          },
+          "query-input": "required name=search_term_string",
+        },
+      },
+      {
+        "@type": "Person",
+        "@id": `${SITE_URL}/#person`,
+        name: "Rishi Chaurasia",
+        url: SITE_URL,
+        jobTitle: "AI Engineer & Full-Stack Developer",
+        description: SITE_DESCRIPTION,
+        image: `${SITE_URL}/opengraph-image`,
+        email: "rishi.chaurasia.dev@gmail.com",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Mumbai",
+          addressRegion: "Maharashtra",
+          addressCountry: "IN",
+        },
+        sameAs: [
+          "https://github.com/RishiBuilds",
+          "https://linkedin.com/in/rishi-chaurasiya",
+          "https://x.com/rishitwts_",
+        ],
+        knowsAbout: [
+          "Artificial Intelligence",
+          "Machine Learning",
+          "Full-Stack Development",
+          "TypeScript",
+          "Python",
+          "Next.js",
+          "React",
+          "Docker",
+          "System Design",
+        ],
+      },
+    ],
+  };
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData, null, 0) }}
+    />
+  );
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
-        <link rel="me" href="https://github.com/RishiBuilds" />
-        <link rel="me" href="https://x.com/rishitwts_" />
-        <link rel="me" href="https://devfolio.co/@RishiBuilds" />
-        <link rel="me" href="https://leetcode.com/u/RishiBuilds" />
-        <link rel="me" href="https://linkedin.com/in/rishi-chaurasiya" />
-        <link rel="me" href="https://discord.com/users/hippo06417" />
+        <JsonLd />
       </head>
-      <body className={`${inter.variable} font-sans antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
+      <body className="bg-background text-foreground min-h-svh font-sans antialiased">
+        <ThemeProvider>
+          <a href="#main-content" className="skip-link">
+            Skip to content
+          </a>
+          <TopInfoBar />
+          <Navbar />
+          <main id="main-content" className="mx-auto w-full max-w-(--breakpoint-md) px-4 pt-8 pb-4">
+            {children}
+          </main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

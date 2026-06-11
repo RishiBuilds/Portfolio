@@ -1,7 +1,438 @@
-export default function Home() {
+"use client";
+
+import { useState, useCallback, useEffect } from "react";
+import Link from "next/link";
+import {
+  ChevronRight,
+  ExternalLink,
+  Github,
+  Linkedin,
+  Twitter,
+  Sparkles,
+  MapPin,
+  FileDown,
+  Eye,
+  X,
+  GraduationCap,
+  Trophy,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  personalInfo,
+  techStack,
+  skillCategories,
+  hackathons,
+  totalHackathonPrize,
+  education,
+} from "@/data/resume";
+import { projects } from "@/data/projects";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { TechStackBar } from "@/components/tech-stack-bar";
+import { SkillsGrid } from "@/components/skills-grid";
+import { HackathonTimeline } from "@/components/hackathon-timeline";
+import { OrgLogo } from "@/components/org-logo";
+import { XIcon } from "@/components/icons";
+
+const socialIcons: Record<string, React.ReactNode> = {
+  github: <Github className="h-5 w-5" />,
+  linkedin: <Linkedin className="h-5 w-5" />,
+  twitter: <Twitter className="h-5 w-5" />,
+  x: <XIcon className="h-5 w-5" />,
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" as const },
+  },
+};
+
+const featuredProjects = projects.filter((p) => p.featured).slice(0, 2);
+
+function SectionHeader({
+  icon: Icon,
+  title,
+  description,
+  aside,
+}: {
+  icon: React.ElementType;
+  title: string;
+  description?: string;
+  aside?: React.ReactNode;
+}) {
   return (
-    <main>
-      <div>Hello world!</div>
-    </main>
+    <div className="mb-4 flex flex-col gap-1 border-b pb-2 sm:flex-row sm:items-baseline sm:justify-between">
+      <div className="flex flex-col gap-0.5">
+        <div className="flex items-center gap-2">
+          <Icon className="text-muted-foreground/80 h-5 w-5" />
+          <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight">{title}</h2>
+        </div>
+        {description && <p className="text-muted-foreground mt-0.5 text-sm">{description}</p>}
+      </div>
+      {aside && (
+        <span className="text-muted-foreground shrink-0 text-xs font-semibold">{aside}</span>
+      )}
+    </div>
+  );
+}
+
+function ProjectCard({ project }: { project: (typeof projects)[number] }) {
+  return (
+    <div className="bg-card hover:border-foreground/20 flex flex-col rounded-2xl border p-5 shadow-xs transition-all duration-300 sm:p-6">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
+        <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="scroll-m-20 text-xl font-bold tracking-tight sm:text-2xl">
+              {project.title}
+            </h3>
+            <span className="bg-muted/60 text-muted-foreground rounded-full border px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase">
+              {project.year}
+            </span>
+            <span className="bg-muted/50 text-muted-foreground rounded-full border px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase">
+              {project.category}
+            </span>
+          </div>
+
+          <p className="text-muted-foreground text-sm leading-relaxed">{project.description}</p>
+
+          {project.impact && (
+            <span className="mt-1 inline-flex w-fit items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+              ⚡ {project.impact}
+            </span>
+          )}
+
+          {project.highlights && project.highlights.length > 0 && (
+            <ul className="mt-3 space-y-1" role="list">
+              {project.highlights.slice(0, 3).map((highlight, idx) => (
+                <li
+                  key={idx}
+                  className="text-muted-foreground flex items-start gap-2 text-xs"
+                  role="listitem"
+                >
+                  <span
+                    className="bg-foreground/20 mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                    aria-hidden="true"
+                  />
+                  <span>{highlight}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className="flex shrink-0 items-center gap-2 self-start">
+          {project.liveUrl && (
+            <Button variant="outline" size="icon" asChild className="h-8 w-8 rounded-lg">
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${project.title} live demo`}
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            </Button>
+          )}
+          {project.githubUrl && (
+            <Button variant="outline" size="icon" asChild className="h-8 w-8 rounded-lg">
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${project.title} source code`}
+              >
+                <Github className="h-3.5 w-3.5" />
+              </a>
+            </Button>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-1.5">
+        {project.techStack.map((tech) => (
+          <span
+            key={tech}
+            className="bg-muted/40 text-muted-foreground hover:text-foreground hover:border-foreground/30 cursor-default rounded-md border px-2 py-0.5 text-[10px] font-semibold transition-colors"
+          >
+            {tech}
+          </span>
+        ))}
+      </div>
+
+      <div className="mt-4 flex justify-end">
+        <Button asChild variant="outline" className="w-full rounded-lg sm:w-fit" size="sm">
+          <Link href={`/projects/${project.slug}`}>
+            View details <ChevronRight className="ml-1 h-3.5 w-3.5" />
+          </Link>
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function ResumeModal({
+  isOpen,
+  onClose,
+  resumeUrl,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  resumeUrl: string;
+}) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Resume Preview"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8"
+        >
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="bg-background/80 fixed inset-0 cursor-pointer backdrop-blur-md"
+          />
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 15 }}
+            transition={{ type: "spring", duration: 0.4 }}
+            className="bg-card border-border/80 relative z-10 flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-2xl border shadow-2xl"
+          >
+            <div className="border-border/40 bg-muted/20 flex items-center justify-between border-b px-6 py-4">
+              <div className="flex flex-col">
+                <h2 className="text-foreground text-base font-bold tracking-tight">
+                  Resume Preview
+                </h2>
+                <p className="text-muted-foreground mt-0.5 text-[10px] font-semibold tracking-widest uppercase">
+                  Rishi Chaurasia
+                </p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  asChild
+                  className="h-8 gap-1.5 rounded-lg text-xs font-semibold"
+                >
+                  <a href={resumeUrl} download="Rishi_Chaurasia_Resume.pdf">
+                    <FileDown className="h-3.5 w-3.5" />
+                    Download
+                  </a>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon-xs"
+                  onClick={onClose}
+                  aria-label="Close resume preview"
+                  className="hover:bg-muted/85 text-muted-foreground hover:text-foreground cursor-pointer rounded-lg"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="bg-muted/30 h-full flex-1 p-2 sm:p-4">
+              <iframe
+                src="/resume"
+                className="border-border/50 bg-background h-full w-full rounded-xl border"
+                title="Resume Preview"
+              />
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+export default function HomePage() {
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const openPreview = useCallback(() => setIsPreviewOpen(true), []);
+  const closePreview = useCallback(() => setIsPreviewOpen(false), []);
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="flex flex-col gap-10 pb-12"
+    >
+      <motion.div variants={itemVariants} className="flex flex-col gap-3">
+        {personalInfo.availableForWork && (
+          <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            </span>
+            Available for work
+          </div>
+        )}
+
+        <div className="flex flex-col gap-1.5">
+          <h1 className="scroll-m-20 text-4xl leading-none font-extrabold tracking-tight sm:text-5xl">
+            {personalInfo.greeting}
+          </h1>
+          <p className="text-muted-foreground text-lg font-semibold tracking-tight sm:text-xl">
+            {personalInfo.title}
+          </p>
+        </div>
+
+        <div className="mt-1 flex flex-wrap items-center gap-3">
+          <div className="text-muted-foreground flex items-center gap-1.5 text-sm font-medium">
+            <MapPin className="text-muted-foreground/80 h-4 w-4" />
+            <span>{personalInfo.location.display}</span>
+          </div>
+          <span className="text-muted-foreground/30 hidden sm:inline">•</span>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={openPreview}
+              className="h-8 cursor-pointer gap-1.5 rounded-lg text-xs font-semibold"
+            >
+              <Eye className="h-3.5 w-3.5" />
+              Preview Resume
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              asChild
+              className="h-8 gap-1.5 rounded-lg text-xs font-semibold"
+            >
+              <a href={personalInfo.resumeUrl} download="Rishi_Chaurasia_Resume.pdf">
+                <FileDown className="h-3.5 w-3.5" />
+                Download
+              </a>
+            </Button>
+          </div>
+        </div>
+
+        <div className="mt-2 space-y-4">
+          {personalInfo.bio.map((paragraph, i) => (
+            <p key={i} className="text-muted-foreground max-w-2xl text-base leading-7">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+      </motion.div>
+
+      <motion.div variants={itemVariants} className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <TechStackBar items={techStack} />
+        {personalInfo.socialLinks.map((link) => (
+          <a
+            key={link.name}
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+            <Card variant="interactive" size="sm" className="h-full">
+              <CardHeader className="flex flex-row items-center justify-between py-3">
+                <div className="flex flex-col gap-0.5">
+                  <CardTitle className="text-sm font-semibold">{link.name}</CardTitle>
+                  <CardDescription className="text-xs">@{link.username}</CardDescription>
+                </div>
+                <div className="text-muted-foreground group-hover/card:text-foreground transition-colors">
+                  {socialIcons[link.icon]}
+                </div>
+              </CardHeader>
+            </Card>
+          </a>
+        ))}
+      </motion.div>
+
+      <motion.section variants={itemVariants} className="flex flex-col">
+        <SectionHeader icon={Sparkles} title="Skills & Expertise" />
+        <SkillsGrid categories={skillCategories} />
+      </motion.section>
+
+      {education && education.length > 0 && (
+        <motion.section variants={itemVariants} className="flex flex-col">
+          <SectionHeader icon={GraduationCap} title="Education" />
+          <div className="space-y-3">
+            {education.map((edu, index) => (
+              <div
+                key={`${edu.school}-${index}`}
+                className="bg-card hover:border-foreground/20 flex items-start gap-4 rounded-2xl border p-5 shadow-xs transition-all duration-300"
+              >
+                <OrgLogo src={edu.logo} alt={edu.school} fallback={edu.school} />
+                <div className="flex min-w-0 flex-1 flex-col justify-between gap-2 sm:flex-row sm:items-start">
+                  <div className="flex min-w-0 flex-col">
+                    <h3 className="text-base font-bold tracking-tight">{edu.school}</h3>
+                    <p className="text-muted-foreground mt-0.5 text-sm">{edu.degree}</p>
+                  </div>
+                  <span className="text-muted-foreground shrink-0 text-xs">{edu.duration}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.section>
+      )}
+
+      <motion.section variants={itemVariants} className="flex flex-col">
+        <SectionHeader
+          icon={Sparkles}
+          title="Featured Projects"
+          description="A selection of recent developer tools, AI platforms, and production systems."
+        />
+        <div className="space-y-5">
+          {featuredProjects.map((project) => (
+            <ProjectCard key={project.slug} project={project} />
+          ))}
+        </div>
+        <div className="mt-5 flex justify-center">
+          <Button variant="outline" asChild className="gap-1.5 rounded-xl">
+            <Link href="/projects">
+              View all projects <ChevronRight className="h-3.5 w-3.5" />
+            </Link>
+          </Button>
+        </div>
+      </motion.section>
+
+      <motion.section variants={itemVariants} className="flex flex-col">
+        <SectionHeader
+          icon={Trophy}
+          title="Hackathons & Achievements"
+          aside={`${hackathons.length} hackathons · $${totalHackathonPrize.toLocaleString()} in prizes`}
+        />
+        <HackathonTimeline items={hackathons} />
+      </motion.section>
+
+      <ResumeModal
+        isOpen={isPreviewOpen}
+        onClose={closePreview}
+        resumeUrl={personalInfo.resumeUrl}
+      />
+    </motion.div>
   );
 }
