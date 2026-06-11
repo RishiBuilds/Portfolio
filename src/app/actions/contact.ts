@@ -7,86 +7,113 @@ interface ContactFormData {
   message: string;
 }
 
-interface ContactFormResult {
+export interface ContactFormResult {
   success: boolean;
   error?: string;
+  field?: keyof ContactFormData;
 }
 
-function sanitize(value: string): string {
-  return value.trim().replace(/\s+/g, " ");
+const LIMITS = {
+  name:    { min: 2,  max: 100  },
+  subject: { min: 0,  max: 200  },
+  message: { min: 10, max: 2000 },
+} as const;
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function extractField(formData: FormData, key: string): string {
+  const raw = formData.get(key);
+  if (typeof raw !== "string") return "";
+  return raw.trim().replace(/\s+/g, " ");
 }
 
-function isValidEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+function validate(data: ContactFormData): ContactFormResult | null {
+  if (!data.name)
+    return { success: false, error: "Name is required.", field: "name" };
+
+  if (data.name.length < LIMITS.name.min)
+    return { success: false, error: `Name must be at least ${LIMITS.name.min} characters.`, field: "name" };
+
+  if (data.name.length > LIMITS.name.max)
+    return { success: false, error: `Name must be under ${LIMITS.name.max} characters.`, field: "name" };
+
+  if (!data.email)
+    return { success: false, error: "Email is required.", field: "email" };
+
+  if (!EMAIL_RE.test(data.email))
+    return { success: false, error: "Please enter a valid email address.", field: "email" };
+
+  if (data.subject.length > LIMITS.subject.max)
+    return { success: false, error: `Subject must be under ${LIMITS.subject.max} characters.`, field: "subject" };
+
+  if (!data.message)
+    return { success: false, error: "Message is required.", field: "message" };
+
+  if (data.message.length < LIMITS.message.min)
+    return { success: false, error: `Message must be at least ${LIMITS.message.min} characters.`, field: "message" };
+
+  if (data.message.length > LIMITS.message.max)
+    return { success: false, error: `Message must be under ${LIMITS.message.max} characters.`, field: "message" };
+
+  return null;
 }
 
-export async function submitContactForm(formData: FormData): Promise<ContactFormResult> {
+async function sendViaWeb3Forms(
+  data: ContactFormData,
+  accessKey: string
+): Promise<ContactFormResult> {
+  const res = await fetch("https://api.web3forms.com/submit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      access_key:  accessKey,
+      name:        data.name,
+      email:       data.email,
+      subject:     data.subject || `Portfolio contact from ${data.name}`,
+      message:     data.message,
+      from_name:   `${data.name} via Portfolio`,
+    }),
+  });
+
+  const json = await res.json().catch(() => ({}));
+
+  if (!res.ok || !json.success) {
+    const message = typeof json.message === "string" ? json.message : "Submission rejected.";
+    console.error("[contact] Web3Forms error:", { status: res.status, json });
+    return { success: false, error: message };
+  }
+
+  return { success: true };
+}
+
+export async function submitContactForm(
+  formData: FormData
+): Promise<ContactFormResult> {
+  const data: ContactFormData = {
+    name:    extractField(formData, "name"),
+    email:   extractField(formData, "email"),
+    subject: extractField(formData, "subject"),
+    message: extractField(formData, "message"),
+  };
+
+  const validationError = validate(data);
+  if (validationError) return validationError;
+
+  const accessKey = process.env.WEB3FORMS_ACCESS_KEY;
+
+  if (!accessKey) {
+    console.warn("[contact] WEB3FORMS_ACCESS_KEY not set - skipping submission.");
+    console.info("[contact] Form data:", data);
+    return { success: true };
+  }
+
   try {
-    const data: ContactFormData = {
-      name: sanitize(formData.get("name") as string),
-      email: sanitize(formData.get("email") as string),
-      subject: sanitize((formData.get("subject") as string) ?? ""),
-      message: sanitize(formData.get("message") as string),
-    };
-
-    if (!data.name || !data.email || !data.message) {
-      return { success: false, error: "Name, email, and message are required." };
-    }
-
-    if (data.name.length < 2) {
-      return { success: false, error: "Name must be at least 2 characters." };
-    }
-
-    if (!isValidEmail(data.email)) {
-      return { success: false, error: "Invalid email address." };
-    }
-
-    if (data.message.length < 10) {
-      return { success: false, error: "Message must be at least 10 characters." };
-    }
-
-    if (data.message.length > 1000) {
-      return { success: false, error: "Message must be under 1000 characters." };
-    }
-
-    console.log("Contact form submission:", data);
-
-    const accessKey = process.env.WEB3FORMS_ACCESS_KEY;
-    if (!accessKey) {
-      console.warn("WEB3FORMS_ACCESS_KEY is not defined. Falling back to mock success.");
-      return { success: true };
-    }
-
-    try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          access_key: accessKey,
-          name: data.name,
-          email: data.email,
-          subject: data.subject || `Portfolio Contact from ${data.name}`,
-          message: data.message,
-          from_name: `${data.name} via Portfolio`,
-        }),
-      });
-
-      const result = await response.json();
-      if (!response.ok || !result.success) {
-        console.error("Web3Forms submission failed:", result);
-        return { success: false, error: result.message || "Failed to send message." };
-      }
-
-      return { success: true };
-    } catch (e) {
-      console.error("Web3Forms request error:", e);
-      return { success: false, error: "Network error. Please try again." };
-    }
-  } catch (error) {
-    console.error("Contact form error:", error);
-    return { success: false, error: "Failed to send message. Please try again." };
+    return await sendViaWeb3Forms(data, accessKey);
+  } catch (err) {
+    console.error("[contact] Network error:", err);
+    return { success: false, error: "Network error - please try again." };
   }
 }
