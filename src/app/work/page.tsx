@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, Calendar, GraduationCap, Briefcase } from "lucide-react";
+import { MapPin, Calendar, GraduationCap, Briefcase, Code2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { experiences, education } from "@/data/resume";
 import { OrgLogo, getInitials } from "@/components/org-logo";
@@ -21,20 +21,22 @@ const itemVariants = {
     transition: { duration: 0.5, ease: "easeOut" as const },
   },
 };
-function calculateDuration(startDateStr: string, endDateStr?: string) {
+
+function calculateDuration(startDateStr: string, endDateStr?: string): string {
   const start = new Date(startDateStr + "-02");
-  const end = endDateStr ? new Date(endDateStr + "-02") : new Date();
+  const end   = endDateStr ? new Date(endDateStr + "-02") : new Date();
 
   let months =
-    (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
+    (end.getFullYear() - start.getFullYear()) * 12 +
+    (end.getMonth() - start.getMonth()) +
+    1;
   if (months <= 0) months = 1;
 
-  const years = Math.floor(months / 12);
+  const years           = Math.floor(months / 12);
   const remainingMonths = months % 12;
 
-  const yearsPart = years > 0 ? `${years} yr${years > 1 ? "s" : ""}` : "";
-  const monthsPart =
-    remainingMonths > 0 ? `${remainingMonths} mo${remainingMonths > 1 ? "s" : ""}` : "";
+  const yearsPart  = years > 0           ? `${years} yr${years > 1 ? "s" : ""}` : "";
+  const monthsPart = remainingMonths > 0 ? `${remainingMonths} mo${remainingMonths > 1 ? "s" : ""}` : "";
 
   return [yearsPart, monthsPart].filter(Boolean).join(" ");
 }
@@ -112,7 +114,7 @@ export default function WorkPage() {
               value: `${education.length} institution${education.length !== 1 ? "s" : ""}`,
             },
             {
-              icon: Calendar,
+              icon: Code2,
               label: "Technologies",
               value: `${totalTechs} across all roles`,
             },
@@ -143,7 +145,9 @@ export default function WorkPage() {
           <Briefcase className="text-muted-foreground/60 mb-3 h-8 w-8 animate-pulse" />
           <h3 className="text-base font-bold tracking-tight">Upskilling & Building</h3>
           <p className="text-muted-foreground mt-2 max-w-md text-xs leading-relaxed">
-            I am currently focused on building innovative side projects, participating in hackathons, and expanding my expertise in AI and Full-Stack development. Professional roles will be featured here soon!
+            I am currently focused on building innovative side projects, participating in hackathons,
+            and expanding my expertise in AI and Full-Stack development. Professional roles will be
+            featured here soon!
           </p>
         </motion.div>
       ) : (
@@ -152,93 +156,91 @@ export default function WorkPage() {
             className="from-border via-border absolute top-3 bottom-3 left-0 w-px bg-gradient-to-b to-transparent"
             aria-hidden="true"
           />
-          {experiences.map((exp, index) => (
-          <motion.div
-            key={`${exp.company}-${index}`}
-            variants={itemVariants}
-            className="group relative"
-          >
-            <TimelineNode isCurrent={exp.isCurrent} />
+          {experiences.map((exp) => (
+            <motion.div
+              key={`${exp.company}-${exp.startDate}`}
+              variants={itemVariants}
+              className="group relative"
+            >
+              <TimelineNode isCurrent={exp.isCurrent} />
 
-            <div className="bg-card group-hover:border-foreground/20 rounded-2xl border p-5 shadow-xs transition-all duration-300 sm:p-6">
-              <div className="mb-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-                <div className="flex min-w-0 items-start gap-3.5">
-                  <OrgLogo
-                    src={exp.logo}
-                    alt={exp.company}
-                    fallback={getInitials(exp.company)}
-                    hoverEffect
-                  />
+              <div className="bg-card group-hover:border-foreground/20 rounded-2xl border p-5 shadow-xs transition-all duration-300 sm:p-6">
+                <div className="mb-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+                  <div className="flex min-w-0 items-start gap-3.5">
+                    <OrgLogo
+                      src={exp.logo}
+                      alt={exp.company}
+                      fallback={getInitials(exp.company)}
+                      hoverEffect
+                    />
+                    <div className="flex min-w-0 flex-col">
+                      <h3 className="flex flex-wrap items-center gap-2 text-lg font-bold tracking-tight">
+                        {exp.role}
+                        {exp.isCurrent && (
+                          <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-[9px] font-semibold tracking-wider text-emerald-600 uppercase dark:text-emerald-400">
+                            Current
+                          </span>
+                        )}
+                      </h3>
+                      <p className="text-muted-foreground mt-0.5 text-sm font-medium">
+                        {exp.company}
+                      </p>
+                    </div>
+                  </div>
 
-                  <div className="flex min-w-0 flex-col">
-                    <h3 className="flex flex-wrap items-center gap-2 text-lg font-bold tracking-tight">
-                      {exp.role}
-                      {exp.isCurrent && (
-                        <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-[9px] font-semibold tracking-wider text-emerald-600 uppercase dark:text-emerald-400">
-                          Current
-                        </span>
-                      )}
-                    </h3>
-                    <p className="text-muted-foreground mt-0.5 text-sm font-medium">
-                      {exp.company}
-                    </p>
+                  <div className="border-border/40 flex shrink-0 items-center justify-between gap-2 border-t pt-2 sm:flex-col sm:items-end sm:justify-start sm:border-t-0 sm:pt-0">
+                    <MetaRow icon={Calendar} strong>
+                      {exp.duration}
+                      <span className="text-muted-foreground/50 ml-1 font-normal">
+                        ({calculateDuration(exp.startDate, exp.endDate)})
+                      </span>
+                    </MetaRow>
+                    <MetaRow icon={MapPin}>{exp.location}</MetaRow>
                   </div>
                 </div>
 
-                <div className="border-border/40 flex shrink-0 items-center justify-between gap-2 border-t pt-2 sm:flex-col sm:items-end sm:justify-start sm:border-t-0 sm:pt-0">
-                  <MetaRow icon={Calendar} strong>
-                    {exp.duration}
-                    <span className="text-muted-foreground/50 ml-1 font-normal">
-                      ({calculateDuration(exp.startDate, exp.endDate)})
-                    </span>
-                  </MetaRow>
-                  <MetaRow icon={MapPin}>{exp.location}</MetaRow>
-                </div>
-              </div>
+                {exp.description && (
+                  <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
+                    {exp.description}
+                  </p>
+                )}
 
-              {exp.description && (
-                <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
-                  {exp.description}
-                </p>
-              )}
+                {exp.highlights.length > 0 && (
+                  <ul className="mb-4 space-y-2">
+                    {exp.highlights.map((highlight) => (
+                      <li
+                        key={highlight}
+                        className="text-muted-foreground flex items-start gap-2.5 text-sm"
+                      >
+                        <span
+                          className="bg-foreground/20 group-hover:bg-foreground/45 mt-2 h-1.5 w-1.5 shrink-0 rounded-full transition-colors"
+                          aria-hidden="true"
+                        />
+                        <span className="leading-relaxed">{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
 
-              {exp.highlights.length > 0 && (
-                <ul className="mb-4 space-y-2" role="list">
-                  {exp.highlights.map((highlight, i) => (
-                    <li
-                      key={i}
-                      className="text-muted-foreground flex items-start gap-2.5 text-sm"
-                      role="listitem"
-                    >
+                {exp.technologies.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {exp.technologies.map((tech) => (
                       <span
-                        className="bg-foreground/20 group-hover:bg-foreground/45 mt-2 h-1.5 w-1.5 shrink-0 rounded-full transition-colors"
-                        aria-hidden="true"
-                      />
-                      <span className="leading-relaxed">{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              {exp.technologies.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {exp.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="bg-muted/20 text-muted-foreground hover:text-foreground hover:border-foreground/30 cursor-default rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-all"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          </motion.div>
-        ))}
-      </div>
+                        key={tech}
+                        className="bg-muted/20 text-muted-foreground hover:text-foreground hover:border-foreground/30 cursor-default rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-all"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          ))}
+        </div>
       )}
 
-      {education && education.length > 0 && (
+      {education.length > 0 && (
         <div className="mt-4 flex flex-col gap-8">
           <div>
             <motion.h2
@@ -260,10 +262,9 @@ export default function WorkPage() {
               className="from-border via-border absolute top-3 bottom-3 left-0 w-px bg-gradient-to-b to-transparent"
               aria-hidden="true"
             />
-
-            {education.map((edu, index) => (
+            {education.map((edu) => (
               <motion.div
-                key={`${edu.school}-${index}`}
+                key={`${edu.school}-${edu.duration}`}
                 variants={itemVariants}
                 className="group relative"
               >
@@ -272,8 +273,11 @@ export default function WorkPage() {
                 <div className="bg-card group-hover:border-foreground/20 rounded-2xl border p-5 shadow-xs transition-all duration-300 sm:p-6">
                   <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
                     <div className="flex min-w-0 items-start gap-3.5">
-                      <OrgLogo src={edu.logo} alt={edu.school} fallback={getInitials(edu.school)} />
-
+                      <OrgLogo
+                        src={edu.logo}
+                        alt={edu.school}
+                        fallback={getInitials(edu.school)}
+                      />
                       <div className="flex min-w-0 flex-col">
                         <h3 className="text-lg font-bold tracking-tight">{edu.school}</h3>
                         <p className="text-muted-foreground mt-0.5 text-sm font-medium">
@@ -296,12 +300,11 @@ export default function WorkPage() {
                   </div>
 
                   {edu.highlights && edu.highlights.length > 0 && (
-                    <ul className="mt-4 space-y-2" role="list">
-                      {edu.highlights.map((item, i) => (
+                    <ul className="mt-4 space-y-2">
+                      {edu.highlights.map((item) => (
                         <li
-                          key={i}
+                          key={item}
                           className="text-muted-foreground flex items-start gap-2.5 text-sm"
-                          role="listitem"
                         >
                           <span
                             className="bg-foreground/20 mt-2 h-1.5 w-1.5 shrink-0 rounded-full"
