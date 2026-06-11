@@ -16,6 +16,16 @@ import { events } from "@/data/events";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+type EventType = "All" | "Meetup" | "Conference" | "Workshop";
+
+const TABS: EventType[] = ["All", "Meetup", "Conference", "Workshop"];
+
+const TYPE_EMOJI: Record<string, string> = {
+  Conference: "🎤",
+  Workshop:   "💻",
+  Meetup:     "🤝",
+};
+
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -51,18 +61,22 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
+function hasExpandableDetails(event: (typeof events)[number]): boolean {
+  return !!(event.description || event.agenda?.length || event.images?.length);
+}
+
 export default function EventsPage() {
-  const [activeTab, setActiveTab] = useState<"All" | "Meetup" | "Conference" | "Workshop">("All");
+  const [activeTab, setActiveTab]       = useState<EventType>("All");
   const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
 
-  const filteredEvents = useMemo(() => {
-    if (activeTab === "All") return events;
-    return events.filter((e) => e.type === activeTab);
-  }, [activeTab]);
+  const filteredEvents = useMemo(
+    () => (activeTab === "All" ? events : events.filter((e) => e.type === activeTab)),
+    [activeTab],
+  );
 
-  const toggleExpand = (slug: string) => {
+  function toggleExpand(slug: string) {
     setExpandedSlug((prev) => (prev === slug ? null : slug));
-  };
+  }
 
   return (
     <motion.div
@@ -71,7 +85,6 @@ export default function EventsPage() {
       animate="visible"
       className="flex flex-col gap-8 pb-12"
     >
-      {/* Title & Header */}
       <div>
         <motion.h1
           variants={itemVariants}
@@ -83,16 +96,16 @@ export default function EventsPage() {
           variants={itemVariants}
           className="text-muted-foreground mt-2 max-w-2xl text-base leading-7"
         >
-          Conferences, technical meetups, and developer gatherings I&apos;ve participated in to connect with fellow builders and explore cutting-edge engineering.
+          Conferences, technical meetups, and developer gatherings I&apos;ve participated in to
+          connect with fellow builders and explore cutting-edge engineering.
         </motion.p>
       </div>
 
-      {/* Tabs / Filters */}
       <motion.div
         variants={itemVariants}
         className="border-border/40 flex flex-wrap gap-1.5 border-b pb-4"
       >
-        {(["All", "Meetup", "Conference", "Workshop"] as const).map((tab) => (
+        {TABS.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -108,24 +121,22 @@ export default function EventsPage() {
         ))}
       </motion.div>
 
-      {/* Events List */}
-      <motion.div layout className="flex flex-col gap-6">
-        <AnimatePresence mode="popLayout">
+      <AnimatePresence mode="popLayout">
+        <motion.div layout className="flex flex-col gap-6">
           {filteredEvents.map((event) => {
-            const isExpanded = expandedSlug === event.slug;
-            const hasDetails = event.description || event.agenda || (event.images && event.images.length > 0);
+            const isExpanded  = expandedSlug === event.slug;
+            const expandable  = hasExpandableDetails(event);
 
             return (
               <motion.div
                 layout
+                key={event.slug}
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
                 transition={{ duration: 0.3 }}
-                key={event.slug}
                 className="bg-card hover:border-foreground/20 overflow-hidden rounded-2xl border shadow-xs transition-all duration-300"
               >
-                {/* Header & Meta Section (Matches the reference image exactly!) */}
                 <div className="flex flex-col gap-4 p-5 sm:p-6">
                   <div className="flex items-start justify-between gap-4">
                     <h2 className="scroll-m-20 text-xl font-bold tracking-tight sm:text-2xl text-foreground">
@@ -136,7 +147,6 @@ export default function EventsPage() {
                     </span>
                   </div>
 
-                  {/* Icon Info Grid */}
                   <div className="grid grid-cols-2 gap-y-3.5 gap-x-6 sm:grid-cols-4">
                     {event.rating && (
                       <div className="flex flex-col gap-1">
@@ -180,13 +190,10 @@ export default function EventsPage() {
 
                   <hr className="border-border/60 my-1" />
 
-                  {/* Primary Details Row */}
                   <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex flex-col gap-2 text-sm text-muted-foreground sm:flex-row sm:items-center sm:gap-4">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-base">
-                          {event.type === "Conference" ? "🎤" : event.type === "Workshop" ? "💻" : "🤝"}
-                        </span>
+                        <span aria-hidden="true">{TYPE_EMOJI[event.type] ?? "📅"}</span>
                         <span className="font-semibold text-foreground/90">
                           {event.type} &bull; {event.duration}
                         </span>
@@ -204,7 +211,6 @@ export default function EventsPage() {
                     </div>
                   </div>
 
-                  {/* Tags */}
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {event.tags.map((tag) => (
                       <span
@@ -216,8 +222,7 @@ export default function EventsPage() {
                     ))}
                   </div>
 
-                  {/* Actions Bar */}
-                  {hasDetails && (
+                  {expandable && (
                     <div className="mt-2 flex items-center justify-between gap-4 pt-1">
                       <div>
                         {event.url && (
@@ -252,11 +257,11 @@ export default function EventsPage() {
                   )}
                 </div>
 
-                {/* Collapsible Details Panel */}
-                {hasDetails && (
+                {expandable && (
                   <AnimatePresence initial={false}>
                     {isExpanded && (
                       <motion.div
+                        key="details"
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
@@ -264,7 +269,6 @@ export default function EventsPage() {
                         className="overflow-hidden"
                       >
                         <div className="border-border/60 space-y-6 border-t bg-muted/10 p-5 sm:p-6">
-                          {/* Description */}
                           {event.description && (
                             <div className="space-y-2">
                               <h3 className="text-sm font-bold tracking-wide text-foreground uppercase">
@@ -276,14 +280,12 @@ export default function EventsPage() {
                             </div>
                           )}
 
-                          {/* Photos Gallery */}
                           {event.images && event.images.length > 0 && (
                             <div className="space-y-3.5">
                               <h3 className="text-sm font-bold tracking-wide text-foreground uppercase">
                                 Event Highlights & Media
                               </h3>
                               <div className="flex flex-col gap-4">
-                                {/* Large Group Photo */}
                                 <div className="border-border/60 relative aspect-video w-full overflow-hidden rounded-xl border bg-muted shadow-sm">
                                   <Image
                                     src={event.images[0].url}
@@ -298,12 +300,11 @@ export default function EventsPage() {
                                   </div>
                                 </div>
 
-                                {/* Slides / Projector Photos Grid */}
                                 {event.images.length > 1 && (
                                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                    {event.images.slice(1).map((imgObj, idx) => (
+                                    {event.images.slice(1).map((imgObj) => (
                                       <div
-                                        key={idx}
+                                        key={imgObj.url}
                                         className="border-border/60 relative aspect-video overflow-hidden rounded-xl border bg-muted shadow-sm"
                                       >
                                         <Image
@@ -324,18 +325,15 @@ export default function EventsPage() {
                             </div>
                           )}
 
-                          {/* Interactive Agenda */}
                           {event.agenda && event.agenda.length > 0 && (
                             <div className="space-y-4">
                               <h3 className="text-sm font-bold tracking-wide text-foreground uppercase">
                                 Event Agenda
                               </h3>
                               <div className="relative border-l border-border pl-4 ml-2 space-y-5">
-                                {event.agenda.map((item, idx) => (
-                                  <div key={idx} className="relative">
-                                    {/* Timeline dot */}
+                                {event.agenda.map((item) => (
+                                  <div key={item.time} className="relative">
                                     <span className="absolute -left-[21.5px] top-1.5 flex h-2.5 w-2.5 items-center justify-center rounded-full bg-primary border-2 border-background" />
-
                                     <div className="flex flex-col gap-0.5">
                                       <div className="flex flex-wrap items-baseline gap-2">
                                         <span className="text-xs font-bold text-primary tabular-nums">
@@ -364,8 +362,8 @@ export default function EventsPage() {
               </motion.div>
             );
           })}
-        </AnimatePresence>
-      </motion.div>
+        </motion.div>
+      </AnimatePresence>
     </motion.div>
   );
 }
