@@ -98,48 +98,61 @@ export default function WorkPage() {
         </motion.p>
       </div>
 
-      <motion.div variants={itemVariants} className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {[
-          {
-            icon: Briefcase,
-            label: "Roles",
-            value: `${experiences.length} position${experiences.length !== 1 ? "s" : ""}`,
-          },
-          {
-            icon: GraduationCap,
-            label: "Education",
-            value: `${education.length} institution${education.length !== 1 ? "s" : ""}`,
-          },
-          {
-            icon: Calendar,
-            label: "Technologies",
-            value: `${totalTechs} across all roles`,
-          },
-        ].map(({ icon: Icon, label, value }) => (
+      {experiences.length > 0 && (
+        <motion.div variants={itemVariants} className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {[
+            {
+              icon: Briefcase,
+              label: "Roles",
+              value: `${experiences.length} position${experiences.length !== 1 ? "s" : ""}`,
+            },
+            {
+              icon: GraduationCap,
+              label: "Education",
+              value: `${education.length} institution${education.length !== 1 ? "s" : ""}`,
+            },
+            {
+              icon: Calendar,
+              label: "Technologies",
+              value: `${totalTechs} across all roles`,
+            },
+          ].map(({ icon: Icon, label, value }) => (
+            <div
+              key={label}
+              className="border-border/60 bg-muted/10 flex items-center gap-3 rounded-xl border px-4 py-3"
+            >
+              <div className="bg-muted flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
+                <Icon className="text-muted-foreground h-4 w-4" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-muted-foreground/60 mb-0.5 text-[10px] leading-none font-bold tracking-wider uppercase">
+                  {label}
+                </p>
+                <p className="text-foreground truncate text-sm font-semibold">{value}</p>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      )}
+
+      {experiences.length === 0 ? (
+        <motion.div
+          variants={itemVariants}
+          className="border-border/60 bg-muted/5 flex flex-col items-center justify-center rounded-2xl border p-8 text-center"
+        >
+          <Briefcase className="text-muted-foreground/60 mb-3 h-8 w-8 animate-pulse" />
+          <h3 className="text-base font-bold tracking-tight">Upskilling & Building</h3>
+          <p className="text-muted-foreground mt-2 max-w-md text-xs leading-relaxed">
+            I am currently focused on building innovative side projects, participating in hackathons, and expanding my expertise in AI and Full-Stack development. Professional roles will be featured here soon!
+          </p>
+        </motion.div>
+      ) : (
+        <div className="relative mt-2 ml-4 space-y-8 pl-6 sm:ml-6 sm:pl-8">
           <div
-            key={label}
-            className="border-border/60 bg-muted/10 flex items-center gap-3 rounded-xl border px-4 py-3"
-          >
-            <div className="bg-muted flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
-              <Icon className="text-muted-foreground h-4 w-4" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-muted-foreground/60 mb-0.5 text-[10px] leading-none font-bold tracking-wider uppercase">
-                {label}
-              </p>
-              <p className="text-foreground truncate text-sm font-semibold">{value}</p>
-            </div>
-          </div>
-        ))}
-      </motion.div>
-
-      <div className="relative mt-2 ml-4 space-y-8 pl-6 sm:ml-6 sm:pl-8">
-        <div
-          className="from-border via-border absolute top-3 bottom-3 left-0 w-px bg-gradient-to-b to-transparent"
-          aria-hidden="true"
-        />
-
-        {experiences.map((exp, index) => (
+            className="from-border via-border absolute top-3 bottom-3 left-0 w-px bg-gradient-to-b to-transparent"
+            aria-hidden="true"
+          />
+          {experiences.map((exp, index) => (
           <motion.div
             key={`${exp.company}-${index}`}
             variants={itemVariants}
@@ -223,6 +236,7 @@ export default function WorkPage() {
           </motion.div>
         ))}
       </div>
+      )}
 
       {education && education.length > 0 && (
         <div className="mt-4 flex flex-col gap-8">

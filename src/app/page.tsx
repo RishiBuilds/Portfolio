@@ -287,63 +287,116 @@ export default function HomePage() {
       animate="visible"
       className="flex flex-col gap-10 pb-12"
     >
-      <motion.div variants={itemVariants} className="flex flex-col gap-3">
-        {personalInfo.availableForWork && (
-          <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-            </span>
-            Available for work
-          </div>
-        )}
+      <motion.div variants={itemVariants} className="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-start">
+        <div className="flex flex-1 flex-col gap-3">
+          {personalInfo.availableForWork && (
+            <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              </span>
+              Available for work
+            </div>
+          )}
 
-        <div className="flex flex-col gap-1.5">
-          <h1 className="scroll-m-20 text-4xl leading-none font-extrabold tracking-tight sm:text-5xl">
-            {personalInfo.greeting}
-          </h1>
-          <p className="text-muted-foreground text-lg font-semibold tracking-tight sm:text-xl">
-            {personalInfo.title}
-          </p>
-        </div>
-
-        <div className="mt-1 flex flex-wrap items-center gap-3">
-          <div className="text-muted-foreground flex items-center gap-1.5 text-sm font-medium">
-            <MapPin className="text-muted-foreground/80 h-4 w-4" />
-            <span>{personalInfo.location.display}</span>
-          </div>
-          <span className="text-muted-foreground/30 hidden sm:inline">•</span>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={openPreview}
-              className="h-8 cursor-pointer gap-1.5 rounded-lg text-xs font-semibold"
-            >
-              <Eye className="h-3.5 w-3.5" />
-              Preview Resume
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              asChild
-              className="h-8 gap-1.5 rounded-lg text-xs font-semibold"
-            >
-              <a href={personalInfo.resumeUrl} download="Rishi_Chaurasia_Resume.pdf">
-                <FileDown className="h-3.5 w-3.5" />
-                Download
-              </a>
-            </Button>
-          </div>
-        </div>
-
-        <div className="mt-2 space-y-4">
-          {personalInfo.bio.map((paragraph, i) => (
-            <p key={i} className="text-muted-foreground max-w-2xl text-base leading-7">
-              {paragraph}
+          <div className="flex flex-col gap-1.5">
+            <h1 className="scroll-m-20 text-4xl leading-none font-extrabold tracking-tight sm:text-5xl">
+              {personalInfo.greeting}
+            </h1>
+            <p className="text-muted-foreground text-lg font-semibold tracking-tight sm:text-xl">
+              {personalInfo.title}
             </p>
-          ))}
+          </div>
+
+          <div className="mt-1 flex flex-wrap items-center gap-3">
+            <div className="text-muted-foreground flex items-center gap-1.5 text-sm font-medium">
+              <MapPin className="text-muted-foreground/80 h-4 w-4" />
+              <span>{personalInfo.location.display}</span>
+            </div>
+            <span className="text-muted-foreground/30 hidden sm:inline">•</span>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={openPreview}
+                className="h-8 cursor-pointer gap-1.5 rounded-lg text-xs font-semibold"
+              >
+                <Eye className="h-3.5 w-3.5" />
+                Preview Resume
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+                className="h-8 gap-1.5 rounded-lg text-xs font-semibold"
+              >
+                <a href={personalInfo.resumeUrl} download="Rishi_Chaurasia_Resume.pdf">
+                  <FileDown className="h-3.5 w-3.5" />
+                  Download
+                </a>
+              </Button>
+            </div>
+          </div>
+
+          <div className="mt-2 space-y-4">
+            {personalInfo.bio.map((paragraph, i) => (
+              <p key={i} className="text-muted-foreground max-w-2xl text-base leading-7">
+                {paragraph}
+              </p>
+            ))}
+          </div>
         </div>
+
+        <motion.div
+          className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border bg-muted shadow-md sm:h-28 sm:w-28 md:h-32 md:w-32"
+          whileHover={{ scale: 1.05, rotate: 1 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
+          <img
+            src={personalInfo.avatarUrl}
+            alt={personalInfo.name}
+            className="h-full w-full object-cover"
+          />
+        </motion.div>
+      </motion.div>
+
+      {/* Stats Banner */}
+      <motion.div
+        variants={itemVariants}
+        className="grid grid-cols-2 gap-3 sm:grid-cols-4"
+      >
+        <Card variant="interactive" className="flex flex-col items-center justify-center p-4 text-center">
+          <span className="text-3xl font-extrabold tracking-tight md:text-4xl text-primary">
+            {projects.length}
+          </span>
+          <span className="text-muted-foreground mt-1 text-[10px] font-semibold tracking-widest uppercase">
+            Projects Built
+          </span>
+        </Card>
+        <Card variant="interactive" className="flex flex-col items-center justify-center p-4 text-center">
+          <span className="text-3xl font-extrabold tracking-tight md:text-4xl text-primary">
+            {techStack.length}
+          </span>
+          <span className="text-muted-foreground mt-1 text-[10px] font-semibold tracking-widest uppercase">
+            Technologies
+          </span>
+        </Card>
+        <Card variant="interactive" className="flex flex-col items-center justify-center p-4 text-center">
+          <span className="text-3xl font-extrabold tracking-tight md:text-4xl text-primary">
+            {hackathons.length}
+          </span>
+          <span className="text-muted-foreground mt-1 text-[10px] font-semibold tracking-widest uppercase">
+            Hackathons
+          </span>
+        </Card>
+        <Card variant="interactive" className="flex flex-col items-center justify-center p-4 text-center">
+          <span className="text-lg sm:text-xl font-extrabold tracking-tight text-primary leading-7 truncate max-w-full px-1">
+            AI & ML
+          </span>
+          <span className="text-muted-foreground mt-1 text-[10px] font-semibold tracking-widest uppercase">
+            Specialization
+          </span>
+        </Card>
       </motion.div>
 
       <motion.div variants={itemVariants} className="grid grid-cols-1 gap-3 md:grid-cols-3">
@@ -419,14 +472,20 @@ export default function HomePage() {
         </div>
       </motion.section>
 
-      <motion.section variants={itemVariants} className="flex flex-col">
-        <SectionHeader
-          icon={Trophy}
-          title="Hackathons & Achievements"
-          aside={`${hackathons.length} hackathons · $${totalHackathonPrize.toLocaleString()} in prizes`}
-        />
-        <HackathonTimeline items={hackathons} />
-      </motion.section>
+      {hackathons.length > 0 && (
+        <motion.section variants={itemVariants} className="flex flex-col">
+          <SectionHeader
+            icon={Trophy}
+            title="Hackathons & Achievements"
+            aside={
+              totalHackathonPrize > 0
+                ? `${hackathons.length} hackathon${hackathons.length !== 1 ? "s" : ""} · $${totalHackathonPrize.toLocaleString()} in prizes`
+                : `${hackathons.length} hackathon${hackathons.length !== 1 ? "s" : ""} attended`
+            }
+          />
+          <HackathonTimeline items={hackathons} />
+        </motion.section>
+      )}
 
       <ResumeModal
         isOpen={isPreviewOpen}
