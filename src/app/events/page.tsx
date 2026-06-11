@@ -331,8 +331,8 @@ export default function EventsPage() {
                                 Event Agenda
                               </h3>
                               <div className="relative border-l border-border pl-4 ml-2 space-y-5">
-                                {event.agenda.map((item) => (
-                                  <div key={item.time} className="relative">
+                                {event.agenda.map((item, idx) => (
+                                  <div key={`${item.time}-${idx}`} className="relative">
                                     <span className="absolute -left-[21.5px] top-1.5 flex h-2.5 w-2.5 items-center justify-center rounded-full bg-primary border-2 border-background" />
                                     <div className="flex flex-col gap-0.5">
                                       <div className="flex flex-wrap items-baseline gap-2">
