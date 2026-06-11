@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Mail,
   Send,
@@ -22,8 +22,11 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import type { ComponentType } from "react";
 import { cn } from "@/lib/utils";
 import { XIcon } from "@/components/icons";
+import { submitContactForm } from "@/app/actions/contact";
 
 type FormStatus = "idle" | "loading" | "success" | "error";
+
+const MESSAGE_MAX = 2000;
 
 const socialIconMap: Record<string, ComponentType<{ size?: number; className?: string }>> = {
   github: Github,
@@ -63,96 +66,55 @@ const quickReplyTopics = [
   "Open source",
 ];
 
+const statusMeta = [
+  { icon: Clock,        label: "Response time",      value: "Within 24 hours" },
+  { icon: MessageSquare, label: "Preferred contact",  value: "Email or DM"     },
+  { icon: Zap,          label: "Availability",        value: "Open to work"    },
+];
+
 export default function ContactPage() {
-  const [status, setStatus] = useState<FormStatus>("idle");
+  const [status, setStatus]             = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [messageLength, setMessageLength] = useState(0);
   const [selectedTopic, setSelectedTopic] = useState("");
-  const [messageValue, setMessageValue] = useState("");
+  const [messageValue, setMessageValue]   = useState("");
+  const formRef    = useRef<HTMLFormElement>(null);
+  const timerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (status === "loading") return;
+
     setStatus("loading");
     setErrorMessage("");
 
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    
-    // Client-side validation
-    const name = (formData.get("name") as string || "").trim().replace(/\s+/g, " ");
-    const email = (formData.get("email") as string || "").trim().replace(/\s+/g, " ");
-    const subject = (formData.get("subject") as string || "").trim().replace(/\s+/g, " ");
-    const message = (formData.get("message") as string || "").trim().replace(/\s+/g, " ");
+    const formData = new FormData(e.currentTarget);
+    const result = await submitContactForm(formData);
 
-    if (!name || !email || !message) {
+    if (!mountedRef.current) return;
+
+    if (result.success) {
+      setStatus("success");
+      setMessageLength(0);
+      setMessageValue("");
+      setSelectedTopic("");
+      formRef.current?.reset();
+    } else {
       setStatus("error");
-      setErrorMessage("Name, email, and message are required.");
-      return;
+      setErrorMessage(result.error ?? "Something went wrong. Please try again.");
     }
 
-    if (name.length < 2) {
-      setStatus("error");
-      setErrorMessage("Name must be at least 2 characters.");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setStatus("error");
-      setErrorMessage("Invalid email address.");
-      return;
-    }
-
-    if (message.length < 10) {
-      setStatus("error");
-      setErrorMessage("Message must be at least 10 characters.");
-      return;
-    }
-
-    if (message.length > 1000) {
-      setStatus("error");
-      setErrorMessage("Message must be under 1000 characters.");
-      return;
-    }
-
-    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "6d595879-cddc-48b7-9495-1744c9ab0b84";
-
-    try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          access_key: accessKey,
-          name,
-          email,
-          subject: subject || `Portfolio Contact from ${name}`,
-          message,
-          from_name: `${name} via Portfolio`,
-        }),
-      });
-
-      const result = await response.json();
-      if (!response.ok || !result.success) {
-        console.error("Web3Forms submission failed:", result);
-        setStatus("error");
-        setErrorMessage(result.message || "Failed to send message.");
-      } else {
-        setStatus("success");
-        setMessageLength(0);
-        setMessageValue("");
-        setSelectedTopic("");
-        form.reset();
-      }
-    } catch (err) {
-      console.error("Web3Forms client-side submit error:", err);
-      setStatus("error");
-      setErrorMessage("Network error. Please try again.");
-    }
-
-    setTimeout(() => setStatus("idle"), 4000);
+    timerRef.current = setTimeout(() => {
+      if (mountedRef.current) setStatus("idle");
+    }, 4000);
   }
 
   function handleTopicSelect(topic: string) {
@@ -189,23 +151,7 @@ export default function ContactPage() {
       </div>
 
       <motion.div variants={itemVariants} className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        {[
-          {
-            icon: Clock,
-            label: "Response time",
-            value: "Within 24 hours",
-          },
-          {
-            icon: MessageSquare,
-            label: "Preferred contact",
-            value: "Email or DM",
-          },
-          {
-            icon: Zap,
-            label: "Availability",
-            value: "Open to work",
-          },
-        ].map(({ icon: Icon, label, value }) => (
+        {statusMeta.map(({ icon: Icon, label, value }) => (
           <div
             key={label}
             className="border-border/60 bg-muted/10 flex items-center gap-3 rounded-xl border px-4 py-3"
@@ -336,7 +282,7 @@ export default function ContactPage() {
           <div className="from-border via-border/50 h-full rounded-2xl bg-gradient-to-br to-transparent p-[1px]">
             <Card className="bg-card/90 h-full border-0 backdrop-blur-xs">
               <CardContent className="pt-6">
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                       <label htmlFor="contact-name" className={labelClass}>
@@ -391,7 +337,7 @@ export default function ContactPage() {
                       name="message"
                       required
                       rows={5}
-                      maxLength={1000}
+                      maxLength={MESSAGE_MAX}
                       value={messageValue}
                       onChange={(e) => {
                         setMessageValue(e.target.value);
@@ -402,17 +348,17 @@ export default function ContactPage() {
                     />
                     <div className="mt-1 flex items-center justify-between">
                       <span className="text-muted-foreground/40 text-[10px]">
-                        Max 1000 characters
+                        Max {MESSAGE_MAX} characters
                       </span>
                       <span
                         className={cn(
                           "text-[10px] font-semibold transition-colors",
-                          messageLength > 900
+                          messageLength > MESSAGE_MAX * 0.9
                             ? "font-bold text-amber-500"
                             : "text-muted-foreground/50",
                         )}
                       >
-                        {messageLength}/1000
+                        {messageLength}/{MESSAGE_MAX}
                       </span>
                     </div>
                   </div>
@@ -443,6 +389,7 @@ export default function ContactPage() {
                   <AnimatePresence>
                     {status === "success" && (
                       <motion.p
+                        key="success"
                         initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 5 }}
@@ -455,6 +402,7 @@ export default function ContactPage() {
 
                     {status === "error" && (
                       <motion.p
+                        key="error"
                         initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 5 }}
