@@ -14,7 +14,7 @@ const inter = Inter({
   fallback: ["system-ui", "arial"],
 });
 
-const SITE_URL = "https://rishibuilds.vercel.app";
+const SITE_URL = "https://rishibuilds-portfolio.vercel.app";
 const SITE_TITLE = "Rishi Chaurasia - Full-Stack Developer";
 const SITE_DESCRIPTION =
   "Portfolio of Rishi Chaurasia - AI engineer, full-stack web developer";
@@ -153,6 +153,8 @@ function JsonLd() {
   );
 }
 
+import { ScrollToTop } from "@/components/scroll-to-top";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
@@ -170,6 +172,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </main>
           <Footer />
+          <ScrollToTop />
         </ThemeProvider>
       </body>
     </html>

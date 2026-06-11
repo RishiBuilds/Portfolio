@@ -88,10 +88,28 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-screen-md items-center justify-center px-4 pb-4">
+      <div className="mx-auto flex max-w-screen-md flex-col items-center justify-center gap-1.5 px-4 pb-4 sm:flex-row sm:gap-3">
         <span className="text-muted-foreground/30 text-[10px] font-medium tracking-wide">
           Built with Next.js & Tailwind CSS
         </span>
+        <span className="text-muted-foreground/20 hidden text-[10px] sm:inline">|</span>
+        <div className="flex gap-3">
+          <a
+            href="https://github.com/RishiBuilds/Portfolio"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-muted-foreground/40 hover:text-foreground text-[10px] font-medium tracking-wide transition-colors duration-150 focus-visible:outline-none"
+          >
+            Source Code
+          </a>
+          <span className="text-muted-foreground/20 text-[10px]">·</span>
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="text-muted-foreground/40 hover:text-foreground text-[10px] font-medium tracking-wide transition-colors duration-150 focus-visible:outline-none"
+          >
+            Back to Top
+          </button>
+        </div>
       </div>
     </footer>
   );

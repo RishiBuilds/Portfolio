@@ -79,6 +79,13 @@ export interface Project {
   highlights: string[];
 }
 
+export interface HackathonExperienceRatings {
+  food?: number;
+  swag?: number;
+  stay?: number;
+  mentorship?: number;
+}
+
 export interface Hackathon {
   name: string;
   result: string;
@@ -86,9 +93,16 @@ export interface Hackathon {
   description: string;
   date: string;
   technologies: string[];
-  placement: "gold" | "silver" | "bronze";
+  placement: "gold" | "silver" | "bronze" | "participant";
   teamSize: number;
   prize?: string;
+  location?: string;
+  venue?: string;
+  duration?: string;
+  rating?: number;
+  url?: string;
+  projectUrl?: string;
+  experienceRatings?: HackathonExperienceRatings;
 }
 
 export interface Education {
