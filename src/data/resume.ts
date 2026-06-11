@@ -160,6 +160,28 @@ export const hackathons: Hackathon[] = [
       mentorship: 4,
     },
   },
+  {
+    name: "Campfire Mumbai 2026",
+    result: "2nd Runner Up",
+    project: "Godot Game Entry",
+    description:
+      "A 24-hour game jam where we built a game from scratch using Godot and competed for prizes.",
+    date: "Feb 28 - Mar 1, 2026",
+    technologies: ["Godot", "GDScript", "Game Design"],
+    placement: "bronze",
+    teamSize: 3,
+    prize: "Shark Plushie",
+    location: "Mumbai",
+    venue: "Our Desk",
+    duration: "24 hours",
+    rating: 5,
+    experienceRatings: {
+      food: 4,
+      swag: 4,
+      stay: 4,
+      mentorship: 5,
+    },
+  },
 ];
 
 export const education: Education[] = [

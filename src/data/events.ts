@@ -232,5 +232,83 @@ export const events: EventDetail[] = [
       }
     ],
     url: "https://luma.com/exg4kejt?tk=DjB9BP"
+  },
+  {
+    slug: "campfire-mumbai-hack-club-game-jam-2026",
+    title: "Campfire Mumbai Game Jam",
+    role: "attendee",
+    rating: 4,
+    location: "Mumbai, India",
+    venue: "Our Desk First Floor, Vishwanand Dham, 5th Road, Khar West, Mumbai, Maharashtra 400052",
+    date: "Feb 28 - Mar 1, 2026",
+    participants: 50,
+    type: "Workshop",
+    duration: "24 hours",
+    organization: "Hack Club & Campfire Mumbai",
+    tags: ["Game Jam", "Godot", "Hack Club", "GDScript", "Campfire", "Game Dev"],
+    description: "Campfire Mumbai was an exciting 24-hour game jam organized by high schoolers from Hack Club. We built a custom game from scratch using the Godot engine, attended workshops, enjoyed free food/swags, and competed for prizes. Our team of 3 was proud to be crowned 2nd Runner Up, taking home the iconic Hack Club shark plushie!",
+    agenda: [
+      {
+        time: "10:00 AM",
+        title: "Registration & Icebreakers",
+        description: "Welcome, badge pickup, grabbing the sick Hack Club Campfire t-shirts, and team formation."
+      },
+      {
+        time: "11:30 AM",
+        title: "Workshop: Intro to Godot",
+        description: "A hands-on workshop led by Aryan Pathak introducing Godot engine components: Scenes, Nodes, and GDScript."
+      },
+      {
+        time: "1:00 PM",
+        title: "Lunch & Networking",
+        description: "Free lunch and networking with artists, developers, and game designers."
+      },
+      {
+        time: "2:00 PM",
+        title: "Game Jam Commences",
+        description: "Theme announcement and the official launch of the 24-hour development clock."
+      },
+      {
+        time: "9:00 PM",
+        title: "Dinner & Midnight Hack",
+        description: "Late-night coding, debugging sessions, playtesting, and design iterations."
+      },
+      {
+        time: "10:00 AM",
+        title: "Submissions & Demos",
+        description: "Uploading the final game builds and presenting the demo to all participants and judges."
+      },
+      {
+        time: "11:30 AM",
+        title: "Closing & Awards Ceremony",
+        description: "Concluding remarks, voting, and announcing winners. Our team placed as 2nd Runner Up!"
+      }
+    ],
+    images: [
+      {
+        url: "/events/campfire-group.jpg",
+        caption: "Our team collaborating at Social Mumbai during the jam"
+      },
+      {
+        url: "/events/campfire-poster.jpg",
+        caption: "Campfire Mumbai Game Jam 2026 Banner"
+      },
+      {
+        url: "/events/campfire-plushie.jpg",
+        caption: "The Blahaj shark plushie we won as the 2nd Runner Up team!"
+      },
+      {
+        url: "/events/campfire-workspace.jpg",
+        caption: "The active workshop and hacking space at Lumos Cowork"
+      },
+      {
+        url: "/events/campfire-tshirt.jpg",
+        caption: "The sick Hack Club Campfire t-shirt we got for participating"
+      },
+      {
+        url: "/events/campfire-workshop.jpg",
+        caption: "Godot workshop session presented by Aryan Pathak"
+      }
+    ]
   }
 ];
