@@ -1,7 +1,7 @@
-import * as React from "react"
-import { Button as ButtonPrimitive } from "@base-ui/react/button"
-import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import { Button as ButtonPrimitive } from "@base-ui/react/button";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
   [
@@ -126,23 +126,22 @@ const buttonVariants = cva(
           "in-data-[slot=button-group]:rounded-lg",
         ].join(" "),
 
-        icon:      "size-8",
+        icon: "size-8",
         "icon-lg": "size-10 rounded-xl",
         "icon-xl": "size-12 rounded-xl [&_svg:not([class*='size-'])]:size-5",
       },
     },
     defaultVariants: {
       variant: "default",
-      size:    "default",
+      size: "default",
     },
-  }
-)
+  },
+);
 
 export interface ButtonProps
-  extends Omit<ButtonPrimitive.Props, "render">,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean
-  loading?: boolean
+  extends Omit<ButtonPrimitive.Props, "render">, VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+  loading?: boolean;
 }
 
 function Spinner() {
@@ -154,33 +153,28 @@ function Spinner() {
       viewBox="0 0 24 24"
       aria-hidden
     >
-      <circle
-        className="opacity-25"
-        cx="12" cy="12" r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
       <path
         className="opacity-75"
         fill="currentColor"
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
       />
     </svg>
-  )
+  );
 }
 
 function Button({
   className,
   variant = "default",
-  size    = "default",
+  size = "default",
   asChild = false,
   loading = false,
   disabled,
   children,
   ...props
 }: ButtonProps) {
-  const classes = cn(buttonVariants({ variant, size, className }))
-  const isDisabled = disabled || loading
+  const classes = cn(buttonVariants({ variant, size, className }));
+  const isDisabled = disabled || loading;
 
   if (asChild && React.isValidElement(children)) {
     return (
@@ -193,7 +187,7 @@ function Button({
         aria-disabled={isDisabled || undefined}
         {...props}
       />
-    )
+    );
   }
 
   return (
@@ -214,7 +208,7 @@ function Button({
         children
       )}
     </ButtonPrimitive>
-  )
+  );
 }
 
-export { Button, buttonVariants }
+export { Button, buttonVariants };
