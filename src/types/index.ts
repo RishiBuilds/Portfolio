@@ -114,3 +114,29 @@ export interface Education {
   description?: string;
   highlights?: string[];
 }
+
+export interface EventAgendaItem {
+  time: string;
+  title: string;
+  description?: string;
+}
+
+export interface EventDetail {
+  slug: string;
+  title: string;
+  role: "attendee" | "speaker" | "organizer";
+  rating?: number;
+  location: string;
+  venue: string;
+  date: string;
+  participants: number;
+  type: "Conference" | "Meetup" | "Workshop";
+  duration: string;
+  organization: string;
+  tags: string[];
+  description?: string;
+  agenda?: EventAgendaItem[];
+  images?: { url: string; caption: string }[];
+  url?: string;
+}
+
