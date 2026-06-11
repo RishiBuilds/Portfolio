@@ -8,6 +8,22 @@ import { Button } from "@/components/ui/button";
 import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 
+const STATUS_STYLES: Record<string, string> = {
+  live:          "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+  "in-progress": "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+  archived:      "bg-muted text-muted-foreground border-border/50",
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  "in-progress": "In Progress",
+};
+
+const FALLBACK_STATUS_STYLE = STATUS_STYLES.archived;
+
+function statusLabel(status: string): string {
+  return STATUS_LABELS[status] ?? status;
+}
+
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -25,38 +41,22 @@ const itemVariants = {
   },
 };
 
-const statusBadges: Record<string, string> = {
-  live: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-  "in-progress": "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
-  archived: "bg-muted text-muted-foreground border-border/50",
-};
-
-function getStatusLabel(status: string) {
-  return status === "in-progress" ? "In Progress" : status;
-}
-
 export default function ProjectsPage() {
   const [activeCategory, setActiveCategory] = useState("All");
 
-  const categories = useMemo(
-    () => ["All", ...Array.from(new Set(projects.map((p) => p.category)))],
-    [],
-  );
-
-  const categoryCounts = useMemo(
-    () =>
-      Object.fromEntries(
-        categories.map((cat) => [
-          cat,
-          cat === "All" ? projects.length : projects.filter((p) => p.category === cat).length,
-        ]),
-      ),
-    [categories],
-  );
+  const { categories, categoryCounts } = useMemo(() => {
+    const cats = ["All", ...Array.from(new Set(projects.map((p) => p.category)))];
+    const counts = Object.fromEntries(
+      cats.map((cat) => [
+        cat,
+        cat === "All" ? projects.length : projects.filter((p) => p.category === cat).length,
+      ]),
+    );
+    return { categories: cats, categoryCounts: counts };
+  }, []);
 
   const filteredProjects = useMemo(
-    () =>
-      activeCategory === "All" ? projects : projects.filter((p) => p.category === activeCategory),
+    () => (activeCategory === "All" ? projects : projects.filter((p) => p.category === activeCategory)),
     [activeCategory],
   );
 
@@ -113,8 +113,8 @@ export default function ProjectsPage() {
         ))}
       </motion.div>
 
-      <motion.div layout className="flex flex-col gap-5">
-        <AnimatePresence mode="popLayout">
+      <AnimatePresence mode="popLayout">
+        <motion.div layout className="flex flex-col gap-5">
           {filteredProjects.length === 0 ? (
             <motion.div
               key="empty"
@@ -132,11 +132,11 @@ export default function ProjectsPage() {
             filteredProjects.map((project) => (
               <motion.div
                 layout
+                key={project.slug}
                 initial={{ opacity: 0, scale: 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.97 }}
                 transition={{ duration: 0.25 }}
-                key={project.slug}
                 className="bg-card hover:border-foreground/20 flex flex-col rounded-2xl border p-5 shadow-xs transition-all duration-300 sm:p-6"
               >
                 <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
@@ -152,9 +152,9 @@ export default function ProjectsPage() {
                         {project.category}
                       </span>
                       <span
-                        className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase ${statusBadges[project.status] ?? statusBadges.archived}`}
+                        className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase ${STATUS_STYLES[project.status] ?? FALLBACK_STATUS_STYLE}`}
                       >
-                        {getStatusLabel(project.status)}
+                        {statusLabel(project.status)}
                       </span>
                     </div>
 
@@ -164,20 +164,17 @@ export default function ProjectsPage() {
 
                     {project.impact && (
                       <span className="inline-flex w-fit items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                        ⚡ {project.impact}
+                        <span aria-hidden="true">⚡</span>
+                        {project.impact}
                       </span>
                     )}
 
                     {project.highlights && project.highlights.length > 0 && (
-                      <ul
-                        className="mt-3 grid grid-cols-1 gap-x-4 gap-y-1.5 sm:grid-cols-2"
-                        role="list"
-                      >
-                        {project.highlights.map((highlight, idx) => (
+                      <ul className="mt-3 grid grid-cols-1 gap-x-4 gap-y-1.5 sm:grid-cols-2" role="list">
+                        {project.highlights.map((highlight) => (
                           <li
-                            key={idx}
+                            key={highlight}
                             className="text-muted-foreground flex items-start gap-2 text-xs"
-                            role="listitem"
                           >
                             <span
                               className="mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
@@ -247,8 +244,8 @@ export default function ProjectsPage() {
               </motion.div>
             ))
           )}
-        </AnimatePresence>
-      </motion.div>
+        </motion.div>
+      </AnimatePresence>
     </motion.div>
   );
 }

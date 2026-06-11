@@ -18,14 +18,19 @@ interface ProjectPageProps {
   params: Promise<{ slug: string }>;
 }
 
-const statusStyles: Record<string, string> = {
-  live: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+const STATUS_STYLES: Record<string, string> = {
+  live:        "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
   "in-progress": "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
-  default: "bg-muted text-muted-foreground border-border/50",
 };
 
-function getStatusLabel(status: string) {
-  return status === "in-progress" ? "In Progress" : status;
+const STATUS_LABELS: Record<string, string> = {
+  "in-progress": "In Progress",
+};
+
+const FALLBACK_STATUS_STYLE = "bg-muted text-muted-foreground border-border/50";
+
+function statusLabel(status: string): string {
+  return STATUS_LABELS[status] ?? status;
 }
 
 export async function generateStaticParams() {
@@ -35,7 +40,6 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
   const project = projects.find((p) => p.slug === slug);
-
   if (!project) return {};
 
   return {
@@ -51,12 +55,14 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
   const project = projects.find((p) => p.slug === slug);
-
   if (!project) notFound();
 
   const currentIndex = projects.findIndex((p) => p.slug === slug);
-  const prevProject = currentIndex > 0 ? projects[currentIndex - 1] : null;
-  const nextProject = currentIndex < projects.length - 1 ? projects[currentIndex + 1] : null;
+  const prevProject  = projects[currentIndex - 1] ?? null;
+  const nextProject  = projects[currentIndex + 1] ?? null;
+
+  const resolvedStatus = project.status ? statusLabel(project.status) : null;
+  const paragraphs     = project.longDescription.split("\n\n");
 
   return (
     <div className="flex flex-col pb-12">
@@ -81,14 +87,15 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         )}
         {project.status && (
           <span
-            className={`rounded-full border px-3 py-1 text-xs font-semibold tracking-wider uppercase ${statusStyles[project.status] ?? statusStyles.default}`}
+            className={`rounded-full border px-3 py-1 text-xs font-semibold tracking-wider uppercase ${STATUS_STYLES[project.status] ?? FALLBACK_STATUS_STYLE}`}
           >
-            {getStatusLabel(project.status)}
+            {resolvedStatus}
           </span>
         )}
         {project.impact && (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-            ⚡ {project.impact}
+            <span aria-hidden="true">⚡</span>
+            {project.impact}
           </span>
         )}
       </div>
@@ -143,11 +150,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             Key Highlights
           </h2>
           <ul className="grid grid-cols-1 gap-2.5 sm:grid-cols-2" role="list">
-            {project.highlights.map((highlight, idx) => (
+            {project.highlights.map((highlight) => (
               <li
-                key={idx}
+                key={highlight}
                 className="border-border/50 bg-card/50 text-muted-foreground hover:border-foreground/25 flex items-start gap-2.5 rounded-xl border p-3.5 text-sm transition-all duration-300 hover:shadow-2xs"
-                role="listitem"
               >
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
                 <span className="leading-snug">{highlight}</span>
@@ -162,8 +168,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           Overview
         </h2>
         <div className="border-border/80 space-y-4 border-l-2 pl-4">
-          {project.longDescription.split("\n\n").map((paragraph, i) => (
-            <p key={i} className="text-muted-foreground text-base leading-relaxed">
+          {paragraphs.map((paragraph) => (
+            <p key={paragraph} className="text-muted-foreground text-base leading-relaxed">
               {paragraph}
             </p>
           ))}
@@ -196,9 +202,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <dt className="text-muted-foreground/60 mb-0.5 text-[10px] font-bold tracking-wider uppercase">
                 Status
               </dt>
-              <dd className="text-foreground text-sm font-semibold">
-                {getStatusLabel(project.status)}
-              </dd>
+              <dd className="text-foreground text-sm font-semibold">{resolvedStatus}</dd>
             </div>
           )}
           <div>
