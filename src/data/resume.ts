@@ -135,7 +135,31 @@ export const skillCategories: SkillCategory[] = [
   },
 ];
 
-export const hackathons: Hackathon[] = [];
+export const hackathons: Hackathon[] = [
+  {
+    name: "Codex Mumbai 2026",
+    result: "Participated",
+    project: "codex-swarm",
+    description:
+      "Build and ship AI-powered tools using coding agents alongside a community of serious builders.",
+    date: "April 4, 2026",
+    technologies: [],
+    placement: "participant",
+    teamSize: 3,
+    location: "Mumbai",
+    venue: "SudoMeet",
+    duration: "8 hours",
+    rating: 4,
+    url: "https://luma.com/exg4kejt?tk=DjB9BP",
+    projectUrl: "https://github.com/RishiBuilds/codex-swarm",
+    experienceRatings: {
+      food: 4,
+      swag: 4,
+      stay: 4,
+      mentorship: 4,
+    },
+  },
+];
 
 export const education: Education[] = [
   {
