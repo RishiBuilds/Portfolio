@@ -1,27 +1,43 @@
 version: 2
-
 updates:
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: weekly
     open-pull-requests-limit: 10
+    labels:
+      - dependencies
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
     groups:
       production-dependencies:
-        patterns:
-          - '*'
-        exclude-patterns:
-          - '@types/*'
+        dependency-type: production
         update-types:
           - minor
           - patch
       dev-dependencies:
         dependency-type: development
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "@types/*"
         update-types:
           - minor
           - patch
+      type-definitions:
+        dependency-type: development
+        patterns:
+          - "@types/*"
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
     labels:
       - dependencies
     commit-message:
-      prefix: chore
-      prefix-development: chore
+      prefix: "chore"
