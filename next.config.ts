@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  transpilePackages: ["lucide-react"],
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
