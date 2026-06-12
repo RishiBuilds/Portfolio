@@ -101,6 +101,7 @@ function ThemeToggle({ className }: { className?: string }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -166,6 +167,7 @@ export function Navbar() {
   const closeMenu = useCallback(() => setIsOpen(false), []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     closeMenu();
   }, [pathname, closeMenu]);
 

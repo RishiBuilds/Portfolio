@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 export function getInitials(name: string) {
   if (!name) return "";
@@ -30,7 +31,7 @@ export function OrgLogo({ src, alt, fallback, hoverEffect = false }: OrgLogoProp
           {fallbackText}
         </span>
       ) : (
-        <img
+        <Image
           src={src}
           alt={alt}
           width={44}

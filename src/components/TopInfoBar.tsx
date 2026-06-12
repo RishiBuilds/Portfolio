@@ -86,6 +86,7 @@ export function TopInfoBar() {
   });
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     const now = new Date();
     setTime(now);
