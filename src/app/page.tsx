@@ -2,12 +2,12 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ChevronRight,
   ExternalLink,
   Github,
   Linkedin,
-  Twitter,
   Sparkles,
   MapPin,
   FileDown,
@@ -37,7 +37,6 @@ import { XIcon } from "@/components/icons";
 const socialIcons: Record<string, React.ReactNode> = {
   github: <Github className="h-5 w-5" />,
   linkedin: <Linkedin className="h-5 w-5" />,
-  twitter: <Twitter className="h-5 w-5" />,
   x: <XIcon className="h-5 w-5" />,
 };
 
@@ -59,6 +58,14 @@ const itemVariants = {
 };
 
 const featuredProjects = projects.filter((p) => p.featured).slice(0, 2);
+
+const hackathonPrizeLabel = (() => {
+  const count = hackathons.length;
+  const countLabel = `${count} hackathon${count !== 1 ? "s" : ""}`;
+  return totalHackathonPrize > 0
+    ? `${countLabel} · $${totalHackathonPrize.toLocaleString()} in cash prizes`
+    : `${countLabel} attended`;
+})();
 
 function SectionHeader({
   icon: Icon,
@@ -108,17 +115,17 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
 
           {project.impact && (
             <span className="mt-1 inline-flex w-fit items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-              ⚡ {project.impact}
+              <span aria-hidden="true">⚡</span>
+              {project.impact}
             </span>
           )}
 
           {project.highlights && project.highlights.length > 0 && (
-            <ul className="mt-3 space-y-1" role="list">
-              {project.highlights.slice(0, 3).map((highlight, idx) => (
+            <ul className="mt-3 space-y-1">
+              {project.highlights.slice(0, 3).map((highlight) => (
                 <li
-                  key={idx}
+                  key={highlight}
                   className="text-muted-foreground flex items-start gap-2 text-xs"
-                  role="listitem"
                 >
                   <span
                     className="bg-foreground/20 mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
@@ -287,7 +294,10 @@ export default function HomePage() {
       animate="visible"
       className="flex flex-col gap-10 pb-12"
     >
-      <motion.div variants={itemVariants} className="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-start">
+      <motion.div
+        variants={itemVariants}
+        className="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-start"
+      >
         <div className="flex flex-1 flex-col gap-3">
           {personalInfo.availableForWork && (
             <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
@@ -339,8 +349,8 @@ export default function HomePage() {
           </div>
 
           <div className="mt-2 space-y-4">
-            {personalInfo.bio.map((paragraph, i) => (
-              <p key={i} className="text-muted-foreground max-w-2xl text-base leading-7">
+            {personalInfo.bio.map((paragraph) => (
+              <p key={paragraph} className="text-muted-foreground max-w-2xl text-base leading-7">
                 {paragraph}
               </p>
             ))}
@@ -352,19 +362,18 @@ export default function HomePage() {
           whileHover={{ scale: 1.05, rotate: 1 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
-          <img
+          <Image
             src={personalInfo.avatarUrl}
             alt={personalInfo.name}
-            className="h-full w-full object-cover"
+            fill
+            sizes="(min-width: 768px) 8rem, 6rem"
+            className="object-cover"
+            priority
           />
         </motion.div>
       </motion.div>
 
-      {/* Stats Banner */}
-      <motion.div
-        variants={itemVariants}
-        className="grid grid-cols-2 gap-3 sm:grid-cols-4"
-      >
+      <motion.div variants={itemVariants} className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Card variant="interactive" className="flex flex-col items-center justify-center p-4 text-center">
           <span className="text-3xl font-extrabold tracking-tight md:text-4xl text-primary">
             {projects.length}
@@ -408,6 +417,7 @@ export default function HomePage() {
             target="_blank"
             rel="noopener noreferrer"
             className="block"
+            aria-label={`${link.name} profile @${link.username}`}
           >
             <Card variant="interactive" size="sm" className="h-full">
               <CardHeader className="flex flex-row items-center justify-between py-3">
@@ -429,13 +439,13 @@ export default function HomePage() {
         <SkillsGrid categories={skillCategories} />
       </motion.section>
 
-      {education && education.length > 0 && (
+      {education.length > 0 && (
         <motion.section variants={itemVariants} className="flex flex-col">
           <SectionHeader icon={GraduationCap} title="Education" />
           <div className="space-y-3">
-            {education.map((edu, index) => (
+            {education.map((edu) => (
               <div
-                key={`${edu.school}-${index}`}
+                key={`${edu.school}-${edu.duration}`}
                 className="bg-card hover:border-foreground/20 flex items-start gap-4 rounded-2xl border p-5 shadow-xs transition-all duration-300"
               >
                 <OrgLogo src={edu.logo} alt={edu.school} fallback={edu.school} />
@@ -474,15 +484,7 @@ export default function HomePage() {
 
       {hackathons.length > 0 && (
         <motion.section variants={itemVariants} className="flex flex-col">
-          <SectionHeader
-            icon={Trophy}
-            title="Hackathons & Achievements"
-            aside={
-              totalHackathonPrize > 0
-                ? `${hackathons.length} hackathon${hackathons.length !== 1 ? "s" : ""} · $${totalHackathonPrize.toLocaleString()} in prizes`
-                : `${hackathons.length} hackathon${hackathons.length !== 1 ? "s" : ""} attended`
-            }
-          />
+          <SectionHeader icon={Trophy} title="Hackathons & Achievements" aside={hackathonPrizeLabel} />
           <HackathonTimeline items={hackathons} />
         </motion.section>
       )}
