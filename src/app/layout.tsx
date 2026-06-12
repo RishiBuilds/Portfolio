@@ -15,7 +15,7 @@ const inter = Inter({
   fallback: ["system-ui", "arial"],
 });
 
-const SITE_URL = "https://rishibuilds-portfolio.vercel.app";
+const SITE_URL = "https://rishi-builds.vercel.app";
 const SITE_TITLE = "Rishi Chaurasia - Full-Stack Developer";
 const SITE_DESCRIPTION =
   "Portfolio of Rishi Chaurasia - AI engineer, full-stack web developer";

@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
       },
     ],
-    sitemap: "https://rishibuilds-portfolio.vercel.app/sitemap.xml",
+    sitemap: "https://rishi-builds.vercel.app/sitemap.xml",
   };
 }
