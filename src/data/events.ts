@@ -83,7 +83,7 @@ export const events: EventDetail[] = [
   },
   {
     slug: "mumbai-ai-openclaw-meetup-1",
-    title: "Mumbai AI x OpenClaw Meetup #️⃣1️⃣",
+    title: "Mumbai AI x OpenClaw Meetup #1",
     role: "attendee",
     rating: 5,
     location: "Mumbai, India",
@@ -274,12 +274,12 @@ export const events: EventDetail[] = [
         description: "Late-night coding, debugging sessions, playtesting, and design iterations."
       },
       {
-        time: "10:00 AM",
+        time: "10:00 AM (Day 2)",
         title: "Submissions & Demos",
         description: "Uploading the final game builds and presenting the demo to all participants and judges."
       },
       {
-        time: "11:30 AM",
+        time: "11:30 AM (Day 2)",
         title: "Closing & Awards Ceremony",
         description: "Concluding remarks, voting, and announcing winners. Our team placed as 2nd Runner Up!"
       }
@@ -287,7 +287,7 @@ export const events: EventDetail[] = [
     images: [
       {
         url: "/events/campfire-group.jpg",
-        caption: "Our team collaborating at Social Mumbai during the jam"
+        caption: "Our team collaborating during the jam"
       },
       {
         url: "/events/campfire-poster.jpg",
@@ -299,7 +299,7 @@ export const events: EventDetail[] = [
       },
       {
         url: "/events/campfire-workspace.jpg",
-        caption: "The active workshop and hacking space at Lumos Cowork"
+        caption: "The active workshop and hacking space at Our Desk"
       },
       {
         url: "/events/campfire-tshirt.jpg",
