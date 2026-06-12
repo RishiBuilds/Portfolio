@@ -29,7 +29,7 @@ export const personalInfo: PersonalInfo = {
     display: "Mumbai, Maharashtra",
   },
   bio: [
-    "I design and ship AI-powered products end-to-end — from GenAI pipelines and computer vision systems to the full-stack interfaces people actually use.",
+    "I design and ship AI-powered products end-to-end from GenAI pipelines and computer vision systems to the full-stack interfaces people actually use.",
     "Primarily working in TypeScript, Next.js, Python, LangChain, PostgreSQL, and Docker. I treat the stack as a toolbox, not a religion.",
   ],
   email: "rishi.chaurasia.dev@gmail.com",

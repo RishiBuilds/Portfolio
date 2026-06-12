@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Locate } from "lucide-react";
 
 const IPGEO_API_KEY = process.env.NEXT_PUBLIC_IPGEO_API_KEY ?? "";
+const FETCH_TIMEOUT_MS = 4000;
 
 function getTimezoneAbbr(): string {
   try {
@@ -27,34 +28,51 @@ interface LocationInfo {
   countryCode: string;
 }
 
+async function fetchWithTimeout(url: string, ms: number): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    return res;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 const PROVIDERS: Array<() => Promise<LocationInfo>> = [
   async () => {
-    const res = await fetch(
+    if (!IPGEO_API_KEY) throw new Error("No IPGeo key configured");
+    const res = await fetchWithTimeout(
       `https://api.ipgeolocation.io/ipgeo?apiKey=${IPGEO_API_KEY}&fields=city,country_name,country_code2`,
+      FETCH_TIMEOUT_MS,
     );
-    if (!res.ok) throw new Error();
+    if (!res.ok) throw new Error(`ipgeolocation.io: ${res.status}`);
     const d = await res.json();
-    if (!d.city) throw new Error();
+    if (!d.city) throw new Error("ipgeolocation.io: missing city");
     return { city: d.city, country: d.country_name ?? "", countryCode: d.country_code2 ?? "" };
   },
   async () => {
-    const res = await fetch("https://freeipapi.com/api/json");
-    if (!res.ok) throw new Error();
+    const res = await fetchWithTimeout("https://freeipapi.com/api/json", FETCH_TIMEOUT_MS);
+    if (!res.ok) throw new Error(`freeipapi.com: ${res.status}`);
     const d = await res.json();
-    if (!d.cityName) throw new Error();
+    if (!d.cityName) throw new Error("freeipapi.com: missing cityName");
     return { city: d.cityName, country: d.countryName ?? "", countryCode: d.countryCode ?? "" };
   },
 ];
 
 async function fetchLocation(): Promise<LocationInfo> {
+  const errors: unknown[] = [];
   for (const provider of PROVIDERS) {
     try {
       return await provider();
-    } catch {
-      continue;
+    } catch (err) {
+      errors.push(err);
     }
   }
-  throw new Error("All providers failed");
+  if (process.env.NODE_ENV !== "production") {
+    console.warn("[TopInfoBar] All location providers failed:", errors);
+  }
+  throw new Error("All location providers failed");
 }
 
 export function TopInfoBar() {
@@ -69,10 +87,20 @@ export function TopInfoBar() {
 
   useEffect(() => {
     setMounted(true);
-    setTime(new Date());
+    const now = new Date();
+    setTime(now);
     setTzAbbr(getTimezoneAbbr());
-    const timer = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timer);
+
+    let timer: ReturnType<typeof setTimeout>;
+    const tick = () => {
+      setTime(new Date());
+      timer = setTimeout(tick, 60_000);
+    };
+
+    const msToNextMinute = 60_000 - (now.getSeconds() * 1000 + now.getMilliseconds());
+    timer = setTimeout(tick, msToNextMinute);
+
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -83,12 +111,16 @@ export function TopInfoBar() {
       .then((info) => {
         if (active) setLocation(info);
       })
-      .catch(() => {});
+      .catch(() => {
+        if (active) setLocation({ city: "", country: "", countryCode: "" });
+      });
 
     return () => {
       active = false;
     };
   }, [mounted]);
+
+  const hasLocation = Boolean(location.city || location.country);
 
   return (
     <motion.div
@@ -112,11 +144,14 @@ export function TopInfoBar() {
       </div>
 
       <div className="group flex cursor-default items-center gap-1.5">
-        <Locate className="text-muted-foreground/75 h-3.5 w-3.5 transition-all duration-500 group-hover:scale-110 group-hover:text-emerald-500 dark:group-hover:text-emerald-400" />
+        <Locate
+          className="text-muted-foreground/75 h-3.5 w-3.5 transition-all duration-500 group-hover:scale-110 group-hover:text-emerald-500 dark:group-hover:text-emerald-400"
+          aria-hidden
+        />
         <span className="text-muted-foreground group-hover:text-foreground text-xs font-medium tracking-tight transition-colors duration-300 md:text-sm dark:group-hover:text-white">
           {location.city && location.country
             ? `${location.city}, ${location.country}`
-            : location.city || location.country || "Detecting..."}
+            : location.city || location.country || (hasLocation ? "" : "Your location")}
         </span>
       </div>
     </motion.div>
