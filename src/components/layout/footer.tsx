@@ -2,16 +2,13 @@
 
 import Link from "next/link";
 import { personalInfo, navItems } from "@/data/resume";
-import { Github, Linkedin, Mail, Twitter, Globe, Youtube } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { XIcon } from "@/components/icons";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   github: Github,
   linkedin: Linkedin,
-  twitter: Twitter,
-  youtube: Youtube,
-  website: Globe,
   x: XIcon,
 };
 
@@ -20,9 +17,15 @@ const SOCIAL_LINKS = [
   ...personalInfo.socialLinks.map((link) => ({
     href: link.url,
     label: link.name,
-    icon: ICON_MAP[link.icon] || Globe,
+    icon: ICON_MAP[link.icon] ?? Mail,
   })),
 ];
+
+const linkClass = cn(
+  "rounded-md text-muted-foreground/50 hover:text-foreground hover:bg-muted/60",
+  "transition-colors duration-150",
+  "focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
+);
 
 function SocialLink({
   href,
@@ -34,26 +37,25 @@ function SocialLink({
   icon: React.ElementType;
 }) {
   const isExternal = href.startsWith("http");
+  const isMail = href.startsWith("mailto:");
+
   return (
-    <Link
+    <a
       href={href}
       aria-label={label}
       target={isExternal ? "_blank" : undefined}
       rel={isExternal ? "noopener noreferrer" : undefined}
-      className={cn(
-        "flex h-7 w-7 items-center justify-center rounded-md",
-        "text-muted-foreground/50 hover:text-foreground hover:bg-muted/60",
-        "transition-colors duration-150",
-        "focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
-      )}
+      className={cn(linkClass, "flex h-7 w-7 items-center justify-center")}
+      {...(isMail ? {} : {})}
     >
       <Icon className="h-3.5 w-3.5" />
-    </Link>
+    </a>
   );
 }
 
 export function Footer() {
   const year = new Date().getFullYear();
+
   return (
     <footer
       className="border-border/40 bg-background/30 mt-12 w-full border-t backdrop-blur-xs"
@@ -66,16 +68,7 @@ export function Footer() {
 
         <nav aria-label="Footer navigation" className="flex items-center gap-0.5">
           {navItems.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                "rounded-md px-2.5 py-1 text-xs font-medium",
-                "text-muted-foreground/50 hover:text-foreground hover:bg-muted/60",
-                "transition-colors duration-150",
-                "focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
-              )}
-            >
+            <Link key={href} href={href} className={cn(linkClass, "px-2.5 py-1 text-xs font-medium")}>
               {label}
             </Link>
           ))}
@@ -93,23 +86,17 @@ export function Footer() {
           Built with Next.js & Tailwind CSS
         </span>
         <span className="text-muted-foreground/20 hidden text-[10px] sm:inline">|</span>
-        <div className="flex gap-3">
-          <a
-            href="https://github.com/RishiBuilds/Portfolio"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground/40 hover:text-foreground text-[10px] font-medium tracking-wide transition-colors duration-150 focus-visible:outline-none"
-          >
-            Source Code
-          </a>
-          <span className="text-muted-foreground/20 text-[10px]">·</span>
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="text-muted-foreground/40 hover:text-foreground text-[10px] font-medium tracking-wide transition-colors duration-150 focus-visible:outline-none"
-          >
-            Back to Top
-          </button>
-        </div>
+        <a
+          href="https://github.com/RishiBuilds/Portfolio"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cn(
+            linkClass,
+            "text-[10px] tracking-wide focus-visible:ring-offset-0",
+          )}
+        >
+          Source Code
+        </a>
       </div>
     </footer>
   );
