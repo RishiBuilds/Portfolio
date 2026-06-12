@@ -142,6 +142,46 @@ export const projects: Project[] = [
       "Integrates Web Speech synthesis and recognition APIs for accessible voice operations",
     ],
   },
+  {
+    slug: "transforming-optimus-prime",
+    title: "Transforming Optimus Prime",
+    description:
+      "Scroll-driven cinematic Optimus Prime transformation with 200 high-res frames, Lore, Gallery, and Timeline pages.",
+    longDescription:
+      "Transforming Optimus Prime is a scroll-driven, highly interactive web application that renders a cinematic 3D-like transformation of Optimus Prime using 200 sequential high-resolution canvas frames. The project features smooth scroll animations utilizing Framer Motion and canvas rendering contexts to achieve high-performance framerates. It also includes sections for Transformers Lore, an interactive Media Gallery, and a Timeline of Prime's evolution, all designed with a premium, futuristic aesthetic.",
+    techStack: ["Next.js", "Framer Motion", "HTML5 Canvas", "TypeScript", "Tailwind CSS"],
+    githubUrl: "https://github.com/RishiBuilds/transforming-optimus-prime",
+    featured: true,
+    impact: "Cinematic scroll-driven rendering at 60 FPS in standard browser canvas",
+    category: "Creative Web",
+    year: 2026,
+    status: "live",
+    highlights: [
+      "Executes high-performance sequential frame rendering on HTML5 Canvas to prevent layout shifts",
+      "Coordinates intricate entrance and exit animation sequences utilizing Framer Motion",
+      "Features full responsive optimization for touch-based mobile and trackpad scroll events",
+    ],
+  },
+  {
+    slug: "nexustick",
+    title: "NexusTick",
+    description:
+      "A Chrome productivity extension combining world clocks, timezone comparisons, Pomodoro timers, and meeting planners.",
+    longDescription:
+      "NexusTick is a comprehensive developer productivity Chrome extension. It integrates multiple utility widgets into a single sidebar, including a multi-timezone world clock, timezone comparisons, a customizable Pomodoro focus timer, a stopwatch, a countdown timer, and a visual meeting planner. The UI is built using HTML/CSS/JavaScript with local storage persistence, ensuring zero-latency operations and offline availability.",
+    techStack: ["JavaScript", "HTML5", "CSS3", "Chrome Extension APIs", "Local Storage"],
+    githubUrl: "https://github.com/RishiBuilds/NexusTick",
+    featured: false,
+    impact: "Consolidates developer workspace utilities in a single sidebar extension",
+    category: "Browser Extensions",
+    year: 2026,
+    status: "live",
+    highlights: [
+      "Integrates a customizable Pomodoro focus timer with desktop audio alerts",
+      "Supports real-time time zone comparison and conversion for remote teams",
+      "Stores user settings and meeting schedules locally via Chrome Storage APIs",
+    ],
+  },
 ];
 
 export const featuredProjects = projects.filter((p) => p.featured);

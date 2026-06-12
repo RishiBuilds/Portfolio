@@ -217,7 +217,7 @@ export default function ContactPage() {
             <CardHeader className="py-4">
               <CardTitle className="text-sm font-bold">Connect with me</CardTitle>
               <CardDescription className="text-xs">
-                Find me across the web — let&apos;s stay in touch.
+                Find me across the web - let&apos;s stay in touch.
               </CardDescription>
             </CardHeader>
             <CardContent className="pb-5">

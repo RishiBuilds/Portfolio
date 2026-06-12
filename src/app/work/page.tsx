@@ -1,8 +1,8 @@
 "use client";
 
-import { MapPin, Calendar, GraduationCap, Briefcase, Code2 } from "lucide-react";
+import { MapPin, Calendar, GraduationCap, Briefcase, Code2, Award, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
-import { experiences, education } from "@/data/resume";
+import { experiences, education, certifications } from "@/data/resume";
 import { OrgLogo, getInitials } from "@/components/org-logo";
 
 const containerVariants = {
@@ -101,7 +101,7 @@ export default function WorkPage() {
       </div>
 
       {experiences.length > 0 && (
-        <motion.div variants={itemVariants} className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <motion.div variants={itemVariants} className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {[
             {
               icon: Briefcase,
@@ -112,6 +112,11 @@ export default function WorkPage() {
               icon: GraduationCap,
               label: "Education",
               value: `${education.length} institution${education.length !== 1 ? "s" : ""}`,
+            },
+            {
+              icon: Award,
+              label: "Certifications",
+              value: `${certifications.length} verified`,
             },
             {
               icon: Code2,
@@ -315,6 +320,80 @@ export default function WorkPage() {
                       ))}
                     </ul>
                   )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {certifications.length > 0 && (
+        <div className="mt-4 flex flex-col gap-8">
+          <div>
+            <motion.h2
+              variants={itemVariants}
+              className="scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-4xl"
+            >
+              Licenses & Certifications
+            </motion.h2>
+            <motion.p
+              variants={itemVariants}
+              className="text-muted-foreground mt-2 text-base leading-7"
+            >
+              Professional credentials and job simulations.
+            </motion.p>
+          </div>
+
+          <div className="relative mt-2 ml-4 space-y-8 pl-6 sm:ml-6 sm:pl-8">
+            <div
+              className="from-border via-border absolute top-3 bottom-3 left-0 w-px bg-gradient-to-b to-transparent"
+              aria-hidden="true"
+            />
+            {certifications.map((cert) => (
+              <motion.div
+                key={`${cert.name}-${cert.date}`}
+                variants={itemVariants}
+                className="group relative"
+              >
+                <TimelineNode />
+
+                <div className="bg-card group-hover:border-foreground/20 rounded-2xl border p-5 shadow-xs transition-all duration-300 sm:p-6">
+                  <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+                    <div className="flex min-w-0 items-start gap-3.5">
+                      <OrgLogo
+                        src={cert.logo}
+                        alt={cert.issuer}
+                        fallback={getInitials(cert.issuer)}
+                      />
+                      <div className="flex min-w-0 flex-1 flex-col">
+                        <h3 className="text-lg font-bold tracking-tight">{cert.name}</h3>
+                        <p className="text-muted-foreground mt-0.5 text-sm font-medium">
+                          {cert.issuer}
+                        </p>
+                        {cert.credentialId && (
+                          <p className="text-muted-foreground/60 mt-1 text-xs font-mono">
+                            Credential ID: {cert.credentialId}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="border-border/40 flex shrink-0 items-center justify-between gap-3 border-t pt-2 sm:flex-col sm:items-end sm:justify-start sm:border-t-0 sm:pt-0">
+                      <MetaRow icon={Calendar} strong>
+                        {cert.date}
+                      </MetaRow>
+                      {cert.credentialUrl && (
+                        <a
+                          href={cert.credentialUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-foreground text-muted-foreground inline-flex items-center gap-1 text-xs font-semibold transition-colors"
+                        >
+                          Verify <ExternalLink className="h-3 w-3" />
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             ))}

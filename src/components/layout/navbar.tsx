@@ -37,7 +37,7 @@ function NavBrand() {
     <Link
       href="/"
       className="group focus-visible:ring-primary mr-4 flex items-center gap-2.5 rounded-sm leading-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-      aria-label={`${personalInfo.name} — home`}
+      aria-label={`${personalInfo.name} - home`}
     >
       <span
         className="bg-foreground text-background flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold tracking-tight"

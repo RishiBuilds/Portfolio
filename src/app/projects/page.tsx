@@ -78,7 +78,7 @@ export default function ProjectsPage() {
           variants={itemVariants}
           className="text-muted-foreground mt-2 max-w-2xl text-base leading-7"
         >
-          Full-stack projects, AI applications, and developer tools I&apos;ve built —{" "}
+          Full-stack projects, AI applications, and developer tools I&apos;ve built -{" "}
           {projects.length} projects and counting.
         </motion.p>
       </div>

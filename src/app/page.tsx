@@ -15,6 +15,7 @@ import {
   X,
   GraduationCap,
   Trophy,
+  Award,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -24,6 +25,7 @@ import {
   hackathons,
   totalHackathonPrize,
   education,
+  certifications,
 } from "@/data/resume";
 import { projects } from "@/data/projects";
 import { Button } from "@/components/ui/button";
@@ -57,7 +59,7 @@ const itemVariants = {
   },
 };
 
-const featuredProjects = projects.filter((p) => p.featured).slice(0, 2);
+const featuredProjects = projects.filter((p) => p.featured).slice(0, 3);
 
 const hackathonPrizeLabel = (() => {
   const count = hackathons.length;
@@ -373,7 +375,7 @@ export default function HomePage() {
         </motion.div>
       </motion.div>
 
-      <motion.div variants={itemVariants} className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <motion.div variants={itemVariants} className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         <Card variant="interactive" className="flex flex-col items-center justify-center p-4 text-center">
           <span className="text-3xl font-extrabold tracking-tight md:text-4xl text-primary">
             {projects.length}
@@ -399,6 +401,14 @@ export default function HomePage() {
           </span>
         </Card>
         <Card variant="interactive" className="flex flex-col items-center justify-center p-4 text-center">
+          <span className="text-3xl font-extrabold tracking-tight md:text-4xl text-primary">
+            {certifications.length}
+          </span>
+          <span className="text-muted-foreground mt-1 text-[10px] font-semibold tracking-widest uppercase">
+            Certifications
+          </span>
+        </Card>
+        <Card variant="interactive" className="col-span-2 sm:col-span-1 flex flex-col items-center justify-center p-4 text-center">
           <span className="text-lg sm:text-xl font-extrabold tracking-tight text-primary leading-7 truncate max-w-full px-1">
             AI & ML
           </span>
@@ -455,6 +465,48 @@ export default function HomePage() {
                     <p className="text-muted-foreground mt-0.5 text-sm">{edu.degree}</p>
                   </div>
                   <span className="text-muted-foreground shrink-0 text-xs">{edu.duration}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.section>
+      )}
+
+      {certifications.length > 0 && (
+        <motion.section variants={itemVariants} className="flex flex-col">
+          <SectionHeader icon={Award} title="Licenses & Certifications" />
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {certifications.map((cert) => (
+              <div
+                key={`${cert.name}-${cert.date}`}
+                className="bg-card hover:border-foreground/20 flex items-start gap-4 rounded-2xl border p-5 shadow-xs transition-all duration-300"
+              >
+                <OrgLogo src={cert.logo} alt={cert.issuer} fallback={cert.issuer} />
+                <div className="flex min-w-0 flex-1 flex-col justify-between gap-2 sm:flex-row sm:items-start">
+                  <div className="flex min-w-0 flex-1 flex-col justify-between gap-2 sm:flex-row sm:items-start">
+                    <div className="flex min-w-0 flex-col">
+                      <h3 className="text-sm font-bold tracking-tight">{cert.name}</h3>
+                      <p className="text-muted-foreground mt-0.5 text-xs">{cert.issuer}</p>
+                      {cert.credentialId && (
+                        <p className="text-muted-foreground/60 mt-1 text-[10px] font-mono">
+                          ID: {cert.credentialId}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 flex-col items-end gap-1">
+                    <span className="text-muted-foreground shrink-0 text-[10px] font-medium">{cert.date}</span>
+                    {cert.credentialUrl && (
+                      <a
+                        href={cert.credentialUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-foreground text-muted-foreground inline-flex items-center gap-0.5 text-[10px] font-semibold transition-colors"
+                      >
+                        Verify <ExternalLink className="h-2.5 w-2.5" />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

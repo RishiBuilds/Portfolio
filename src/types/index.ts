@@ -115,6 +115,15 @@ export interface Education {
   highlights?: string[];
 }
 
+export interface Certification {
+  name: string;
+  issuer: string;
+  date: string;
+  credentialId?: string;
+  credentialUrl?: string;
+  logo?: string;
+}
+
 export interface EventAgendaItem {
   time: string;
   title: string;
