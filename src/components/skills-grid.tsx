@@ -3,20 +3,12 @@
 import { motion } from "framer-motion";
 import { Code, Cpu, Layers, Server, type LucideIcon } from "lucide-react";
 import type { SkillCategory } from "@/types";
-import { cn } from "@/lib/utils";
 
 const ICON_MAP: Record<string, LucideIcon> = {
   code: Code,
   cpu: Cpu,
   layers: Layers,
   server: Server,
-};
-
-const LEVEL_LABELS: Record<number, string> = {
-  1: "Familiar",
-  2: "Comfortable",
-  3: "Proficient",
-  4: "Expert",
 };
 
 const containerVariants = {
@@ -64,42 +56,14 @@ export function SkillsGrid({ categories }: SkillsGridProps) {
               </div>
             </div>
 
-            <div className="space-y-2.5">
+            <div className="flex flex-wrap gap-2">
               {category.skills.map((skill) => (
-                <div
+                <span
                   key={skill.name}
-                  className="group/row hover:bg-muted/40 -mx-2 flex items-center justify-between gap-3 rounded-lg px-2 py-1 transition-colors duration-150"
-                  title={`${skill.name}: ${LEVEL_LABELS[skill.level]}`}
+                  className="bg-muted/40 text-muted-foreground hover:text-foreground hover:border-foreground/30 cursor-default rounded-md border px-2.5 py-1 text-xs font-semibold transition-colors"
                 >
-                  <span className="text-muted-foreground group-hover/row:text-foreground truncate text-sm font-medium transition-colors duration-150">
-                    {skill.name}
-                  </span>
-
-                  <div className="flex shrink-0 items-center gap-2">
-                    <div className="flex items-center gap-[3px]">
-                      {[1, 2, 3, 4].map((i) => (
-                        <div
-                          key={i}
-                          className={cn(
-                            "h-1.5 rounded-full transition-all duration-300",
-                            i <= skill.level
-                              ? cn(
-                                  "bg-primary w-4",
-                                  skill.level === 4 && "bg-primary",
-                                  skill.level === 3 && i <= 3 && "opacity-90",
-                                  skill.level === 2 && i <= 2 && "opacity-80",
-                                  skill.level === 1 && i === 1 && "opacity-70",
-                                )
-                              : "bg-muted-foreground/15 w-3",
-                          )}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-muted-foreground/50 group-hover/row:text-muted-foreground w-[4.5rem] text-right text-[10px] font-semibold transition-colors duration-150">
-                      {LEVEL_LABELS[skill.level]}
-                    </span>
-                  </div>
-                </div>
+                  {skill.name}
+                </span>
               ))}
             </div>
           </motion.div>
