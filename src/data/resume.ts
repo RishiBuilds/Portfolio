@@ -35,8 +35,6 @@ export const personalInfo: PersonalInfo = {
   email: "rishi.chaurasia.dev@gmail.com",
   avatarUrl: "/avatar.jpg",
   resumeUrl: "/resume",
-  github: "https://github.com/RishiBuilds",
-  linkedin: "https://linkedin.com/in/rishi-chaurasiya",
   socialLinks: [
     {
       name: "GitHub",
@@ -50,7 +48,12 @@ export const personalInfo: PersonalInfo = {
       url: "https://linkedin.com/in/rishi-chaurasiya",
       icon: "linkedin",
     },
-    { name: "X", username: "rishitwts_", url: "https://x.com/rishitwts_", icon: "x" },
+    {
+      name: "X",
+      username: "rishitwts_",
+      url: "https://x.com/rishitwts_",
+      icon: "x",
+    },
   ],
 };
 
@@ -144,7 +147,7 @@ export const hackathons: Hackathon[] = [
     description:
       "Build and ship AI-powered tools using coding agents alongside a community of serious builders.",
     date: "April 4, 2026",
-    technologies: [],
+    technologies: ["TypeScript", "Node.js", "AI Agents"],
     placement: "participant",
     teamSize: 3,
     location: "Mumbai",
@@ -195,7 +198,14 @@ export const education: Education[] = [
 
 export const currentRole = experiences.find((e) => e.isCurrent);
 
-export const totalHackathonPrize = hackathons.reduce(
-  (sum, h) => sum + (h.prize ? parseInt(h.prize.replace(/\D/g, ""), 10) : 0),
-  0,
-);
+export const totalHackathonPrize = hackathons.reduce((sum, h) => {
+  if (!h.prize) return sum;
+  const digits = h.prize.replace(/\D/g, "");
+  return digits ? sum + parseInt(digits, 10) : sum;
+}, 0);
+
+export function getSocialLink(name: string) {
+  return personalInfo.socialLinks.find(
+    (link) => link.name.toLowerCase() === name.toLowerCase(),
+  );
+}

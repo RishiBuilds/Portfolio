@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { TopInfoBar } from "@/components/TopInfoBar";
+import { ScrollToTop } from "@/components/scroll-to-top";
 import "./globals.css";
 
 const inter = Inter({
@@ -90,8 +91,8 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
-function JsonLd() {
-  const structuredData = {
+function buildStructuredData() {
+  return {
     "@context": "https://schema.org",
     "@graph": [
       {
@@ -144,20 +145,27 @@ function JsonLd() {
       },
     ],
   };
+}
+
+function JsonLd() {
+  const json = JSON.stringify(buildStructuredData()).replace(/</g, "\\u003c");
 
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData, null, 0) }}
+      dangerouslySetInnerHTML={{ __html: json }}
     />
   );
 }
 
-import { ScrollToTop } from "@/components/scroll-to-top";
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning data-scroll-behavior="smooth">
+    <html
+      lang="en"
+      className={inter.variable}
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
+    >
       <head>
         <JsonLd />
       </head>
