@@ -40,7 +40,7 @@ export const projects: Project[] = [
       "NoteRoot is a developer-first documentation platform designed to run in homelabs or internal teams. It intentionally avoids storing document trees or page markdown in relational databases; instead, it treats the local filesystem directories and Markdown files as the absolute source of truth.\n\nThe backend, built in Go (Gin), dynamically indexes and watches the directories to generate hierarchical navigation trees. It compiles into a single, light-weight Go binary by embedding the React/TypeScript Single Page Application directly. A CGO-free SQLite driver handles user authentication and session tokens locally.",
     techStack: ["Go", "React", "TypeScript", "Vite", "SQLite", "Tailwind CSS", "Docker"],
     githubUrl: "https://github.com/RishiBuilds/NoteRoot",
-    featured: true,
+    featured: false,
     impact: "Zero database dependencies for content; zero-config single binary deployment",
     category: "Systems",
     year: 2026,
@@ -151,7 +151,7 @@ export const projectsByCategory = projects.reduce<Record<string, Project[]>>((ac
   return acc;
 }, {});
 
-export const projectCategories = [...new Set(projects.map((p) => p.category))] as const;
+export const projectCategories = [...new Set(projects.map((p) => p.category))];
 
 export function getProjectBySlug(slug: string): Project | undefined {
   return projects.find((p) => p.slug === slug);
