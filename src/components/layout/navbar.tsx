@@ -30,6 +30,8 @@ const THEME_OPTIONS: ThemeOption[] = [
   { value: "system", label: "System", icon: Monitor },
 ];
 
+const DEFAULT_THEME_OPTION = THEME_OPTIONS[2];
+
 function NavBrand() {
   return (
     <Link
@@ -37,17 +39,14 @@ function NavBrand() {
       className="group focus-visible:ring-primary mr-4 flex items-center gap-2.5 rounded-sm leading-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
       aria-label={`${personalInfo.name} — home`}
     >
-      <span className="relative flex h-2 w-2 shrink-0" aria-hidden>
-        <span className="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-60" />
-        <span className="bg-primary relative inline-flex h-2 w-2 rounded-full" />
+      <span
+        className="bg-foreground text-background flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold tracking-tight"
+        aria-hidden
+      >
+        {personalInfo.name.charAt(0)}
       </span>
-      <span className="flex flex-col leading-none">
-        <span className="text-muted-foreground/50 group-hover:text-muted-foreground text-[9px] font-medium tracking-[0.2em] uppercase transition-colors">
-          dev
-        </span>
-        <span className="text-foreground group-hover:text-primary text-sm font-bold tracking-tight transition-colors">
-          {personalInfo.name.split(" ")[0]}
-        </span>
+      <span className="text-foreground group-hover:text-primary text-sm font-bold tracking-tight transition-colors">
+        {personalInfo.name}
       </span>
     </Link>
   );
@@ -84,7 +83,7 @@ function NavLinks({
                 {label}
                 {isActive && (
                   <span
-                    className="bg-primary absolute bottom-1 left-4 h-1.5 w-1.5 -translate-x-0 rounded-full md:bottom-0 md:left-1/2 md:h-0.5 md:w-4 md:-translate-x-1/2"
+                    className="bg-primary absolute bottom-1 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full md:bottom-0"
                     aria-hidden
                   />
                 )}
@@ -109,7 +108,7 @@ function ThemeToggle({ className }: { className?: string }) {
     return <div className={cn("h-9 w-9 shrink-0", className)} aria-hidden />;
   }
 
-  const currentOption = THEME_OPTIONS.find((o) => o.value === theme) ?? THEME_OPTIONS[2]!;
+  const currentOption = THEME_OPTIONS.find((o) => o.value === theme) ?? DEFAULT_THEME_OPTION;
   const CurrentIcon = currentOption.icon;
 
   return (
