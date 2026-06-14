@@ -2,6 +2,83 @@ import type { EventDetail } from "@/types";
 
 export const events: EventDetail[] = [
   {
+    slug: "microsoft-build-localhost-mumbai-atlas-2026",
+    title: "Build //localhost:Mumbai (ATLAS)",
+    role: "attendee",
+    rating: 5,
+    location: "Mumbai, India",
+    venue: "ATLAS SkillTech University, Equinox Business Park, Kurla West",
+    date: "Jun 13, 2026",
+    participants: 100,
+    type: "Meetup",
+    duration: "5 hours",
+    organization: "Mumbai Techy",
+    tags: ["Microsoft Build", "Azure AI", "GitHub Copilot", "Community"],
+    description: "Participated in the Microsoft Build //localhost:Mumbai event hosted by Mumbai Techy at ATLAS SkillTech University. The event brought the Microsoft Build experience to local developers, focusing on AI-powered innovation, Azure AI, and GitHub Copilot.",
+    agenda: [
+      {
+        time: "10:00 AM",
+        title: "Registration & Networking",
+        description: "Welcome and check-in with the developer community."
+      },
+      {
+        time: "10:45 AM",
+        title: "Welcome Note & Microsoft Build Highlights",
+        description: "Opening note and key announcements from Microsoft Build 2026."
+      },
+      {
+        time: "11:00 AM",
+        title: "Technical Session: Build AI-Powered Applications",
+        description: "Deep dive into building AI applications with Azure AI & GitHub Copilot, followed by workflow demos and best practices."
+      },
+      {
+        time: "12:30 PM",
+        title: "Networking Break",
+        description: "Quick break to connect with speakers and peers."
+      },
+      {
+        time: "12:45 PM",
+        title: "Q&A & Community Interaction",
+        description: "Open discussion addressing developer questions, community roadmap, and networking."
+      },
+      {
+        time: "1:30 PM",
+        title: "Lunch & Closing Note",
+        description: "Closing remarks followed by lunch and community networking."
+      }
+    ],
+    images: [
+      {
+        url: "/events/ms-build-mumbai-banner.jpg",
+        caption: "Microsoft Build //localhost Mumbai community event banner"
+      },
+      {
+        url: "/events/ms-build-mumbai-group.jpg",
+        caption: "Mumbai Techy developer community group photo"
+      },
+      {
+        url: "/events/ms-build-mumbai-keynote.jpg",
+        caption: "Keynote session presenting Microsoft Build 2026 highlights"
+      },
+      {
+        url: "/events/ms-build-mumbai-cosine-similarity.jpg",
+        caption: "Technical session on Cosine Similarity and AI-powered development"
+      },
+      {
+        url: "/events/ms-build-mumbai-speaker.jpg",
+        caption: "Speaker presenting at the Microsoft Build //localhost Mumbai event"
+      },
+      {
+        url: "/events/ms-build-mumbai-audience.jpg",
+        caption: "Developers and attendees working during the hands-on lab session"
+      },
+      {
+        url: "/events/ms-build-mumbai-stickers.jpg",
+        caption: "GitHub Copilot and Microsoft Developer stickers at the event"
+      }
+    ]
+  },
+  {
     slug: "microsoft-build-localhost-mumbai-2026",
     title: "Build //localhost:Mumbai",
     role: "attendee",
