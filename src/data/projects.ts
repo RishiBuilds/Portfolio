@@ -182,6 +182,37 @@ export const projects: Project[] = [
       "Stores user settings and meeting schedules locally via Chrome Storage APIs",
     ],
   },
+  {
+    slug: "agentdao",
+    title: "AgentDAO",
+    description:
+      "Autonomous AI agent governance framework and live treasury control system running on Monad testnet.",
+    longDescription:
+      "AgentDAO is an agent-native governance platform built during the Monad Blitz hackathon. It demonstrates a fully autonomous AI-driven treasury loop: a Marketing Agent (Python, LangChain, Groq) generates and submits marketing campaign proposals, which a Finance Agent evaluates and votes on based on real-time rules (budget caps, treasury reserves, and ROI thresholds). Approved proposals flow through smart contracts (AgentRegistry, AgentTreasury, GovernorDAO) on the Monad testnet to release funds automatically, visualised on a real-time Next.js dashboard.",
+    techStack: [
+      "Solidity",
+      "Foundry",
+      "Next.js",
+      "React",
+      "Tailwind CSS",
+      "Python",
+      "LangChain",
+      "Groq API",
+      "Express.js",
+      "viem",
+    ],
+    githubUrl: "https://github.com/RishiBuilds/AgentDao",
+    featured: true,
+    impact: "Automates multi-agent governance and secure treasury disbursements entirely on-chain",
+    category: "AI & Web3",
+    year: 2026,
+    status: "live",
+    highlights: [
+      "Registers autonomous agents with specific roles and identities on-chain using an AgentRegistry contract",
+      "Evaluates and votes on proposals programmatically using Python agent decision loops",
+      "Integrates GovernorDAO governance logic to handle proposal timelines, timelocks, and payouts",
+    ],
+  },
 ];
 
 export const featuredProjects = projects.filter((p) => p.featured);

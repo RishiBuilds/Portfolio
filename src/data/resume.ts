@@ -174,6 +174,28 @@ export const skillCategories: SkillCategory[] = [
 
 export const hackathons: Hackathon[] = [
   {
+    name: "Monad Blitz Mumbai V3",
+    result: "Participated",
+    project: "AgentDAO",
+    description:
+      "A high-intensity, 12-hour IRL build sprint in Mumbai. Co-built and shipped an autonomous AI governance system that allows AI agents to register, propose marketing campaigns, evaluate them, and distribute funds on-chain.",
+    date: "June 20, 2026",
+    technologies: ["Solidity", "Foundry", "Python", "LangChain", "Next.js", "Express", "Monad"],
+    placement: "participant",
+    teamSize: 3,
+    location: "Mumbai",
+    venue: "IRL Build Sprint",
+    duration: "12 hours",
+    rating: 5,
+    projectUrl: "https://github.com/RishiBuilds/AgentDao",
+    experienceRatings: {
+      food: 5,
+      swag: 5,
+      stay: 5,
+      mentorship: 5,
+    },
+  },
+  {
     name: "Codex Mumbai 2026",
     result: "Participated",
     project: "codex-swarm",

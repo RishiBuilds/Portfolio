@@ -2,6 +2,65 @@ import type { EventDetail } from "@/types";
 
 export const events: EventDetail[] = [
   {
+    slug: "monad-blitz-mumbai-v3-the-agent-economy",
+    title: "Monad Blitz Mumbai V3 - The Agent Economy",
+    role: "attendee",
+    rating: 5,
+    location: "Mumbai, India",
+    venue: "IRL Build Sprint venue, Mumbai",
+    date: "Jun 20, 2026",
+    participants: 120,
+    type: "Workshop",
+    duration: "12 hours",
+    organization: "Monad",
+    tags: ["Monad", "AI Agents", "Blockchain", "On-Chain Identity", "Governance", "IRL Sprint"],
+    description: "Participated in Monad Blitz Mumbai V3 - The Agent Economy, a high-intensity, one-day IRL build sprint where builders created autonomous AI agents, governance systems, and supportive web3 infrastructure on the Monad network. We built AgentDAO, a framework showcasing agent-native governance where agents register, propose marketing campaigns, evaluate decisions, and disburse treasury funds autonomously on-chain.",
+    agenda: [
+      {
+        time: "09:00 AM",
+        title: "Registration & Networking",
+        description: "Checked in, collected swags, and formed teams with other developers."
+      },
+      {
+        time: "10:00 AM",
+        title: "Keynote & Theme Reveal",
+        description: "Kickoff keynote introducing the Monad ecosystem, agentic tooling, and resource guidelines."
+      },
+      {
+        time: "10:30 AM",
+        title: "Hacking Begins",
+        description: "Official start of the one-day sprint. Brainstormed design specs and set up contracts and agent loops."
+      },
+      {
+        time: "02:00 PM",
+        title: "Mentoring & Mid-way Check-in",
+        description: "Interacted with Monad core mentors to debug RPC nodes, gas issues, and refine agent architectures."
+      },
+      {
+        time: "06:00 PM",
+        title: "Feature Freeze & Polish",
+        description: "Wrapped up front-end and on-chain integrations, completed autonomous loop testing, and prepared project video demo."
+      },
+      {
+        time: "07:30 PM",
+        title: "Demos & Peer Judging",
+        description: "Presented AgentDAO live to other builders. Peer-voting session for the top projects."
+      },
+      {
+        time: "09:00 PM",
+        title: "Dinner & Award Ceremony",
+        description: "Closing dinner, networking, and announcement of the winning teams."
+      }
+    ],
+    images: [
+      {
+        url: "/events/monad-blitz-mumbai.png",
+        caption: "Monad Blitz Mumbai V3 - Custom Cyberpunk Theme Banner"
+      }
+    ],
+    url: "https://github.com/RishiBuilds/AgentDao"
+  },
+  {
     slug: "microsoft-build-localhost-mumbai-atlas-2026",
     title: "Build //localhost:Mumbai (ATLAS)",
     role: "attendee",
