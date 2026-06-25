@@ -189,10 +189,10 @@ export const hackathons: Hackathon[] = [
     rating: 5,
     projectUrl: "https://github.com/RishiBuilds/AgentDao",
     experienceRatings: {
-      food: 5,
-      swag: 5,
-      stay: 5,
-      mentorship: 5,
+      food: 4,
+      swag: 3,
+      stay: 4,
+      mentorship: 2,
     },
   },
   {

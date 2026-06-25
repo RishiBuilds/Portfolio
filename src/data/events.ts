@@ -54,6 +54,14 @@ export const events: EventDetail[] = [
     ],
     images: [
       {
+        url: "/events/monad-blitz-team.jpg",
+        caption: "Our team collaborating at Monad Blitz Mumbai V3"
+      },
+      {
+        url: "/events/monad-blitz-venue.jpg",
+        caption: "Vibrant builder energy at the Monad Blitz Mumbai hacking hall"
+      },
+      {
         url: "/events/monad-blitz-mumbai.png",
         caption: "Monad Blitz Mumbai V3 - Custom Cyberpunk Theme Banner"
       }
