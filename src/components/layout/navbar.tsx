@@ -36,11 +36,11 @@ function NavBrand() {
   return (
     <Link
       href="/"
-      className="group focus-visible:ring-primary mr-4 flex items-center gap-2.5 rounded-sm leading-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+      className="group focus-visible:ring-primary mr-4 flex items-center gap-2.5 leading-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
       aria-label={`${personalInfo.name} - home`}
     >
       <span
-        className="bg-foreground text-background flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold tracking-tight"
+        className="bg-accent text-accent-foreground border-2 border-foreground flex h-8 w-8 shrink-0 items-center justify-center text-xs font-black tracking-tight shadow-[2px_2px_0_var(--foreground)]"
         aria-hidden
       >
         {personalInfo.name.charAt(0)}
@@ -73,11 +73,11 @@ function NavLinks({
                 onClick={onItemClick}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "relative block rounded-md px-4 py-2.5 text-sm font-medium md:px-3 md:py-1.5",
+                  "relative block border-2 border-transparent px-4 py-2.5 text-sm font-bold md:px-3 md:py-1.5",
                   "transition-colors duration-150",
                   "focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
-                  "text-muted-foreground hover:text-foreground hover:bg-muted/60",
-                  isActive && "text-foreground bg-muted hover:bg-muted",
+                  "text-muted-foreground hover:border-foreground hover:text-foreground hover:bg-primary",
+                  isActive && "border-foreground bg-primary text-foreground hover:bg-primary",
                 )}
               >
                 {label}

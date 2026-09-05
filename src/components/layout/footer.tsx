@@ -22,7 +22,7 @@ const SOCIAL_LINKS = [
 ];
 
 const linkClass = cn(
-  "rounded-md text-muted-foreground/50 hover:text-foreground hover:bg-muted/60",
+  "text-background/75 hover:text-foreground hover:bg-primary",
   "transition-colors duration-150",
   "focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
 );
@@ -58,11 +58,11 @@ export function Footer() {
 
   return (
     <footer
-      className="border-border/40 bg-background/30 mt-12 w-full border-t backdrop-blur-xs"
+      className="border-foreground bg-foreground text-background mt-12 w-full border-t-2"
       aria-label="Site footer"
     >
       <div className="mx-auto flex max-w-screen-md flex-col items-center justify-between gap-3 px-4 py-4 sm:flex-row">
-        <p className="text-muted-foreground/50 text-xs font-medium">
+        <p className="text-background/75 text-xs font-bold">
           © {year} {personalInfo.name}
         </p>
 
