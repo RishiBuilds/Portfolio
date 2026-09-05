@@ -40,7 +40,7 @@ export function SkillsGrid({ categories }: SkillsGridProps) {
           <motion.div
             key={category.category}
             variants={itemVariants}
-            className="bg-card hover:border-foreground/20 flex flex-col rounded-2xl border p-5 shadow-xs transition-all duration-300 hover:shadow-sm"
+            className="bg-card hover:border-foreground/20 flex flex-col rounded-2xl border-2 border-foreground p-5 shadow-[5px_5px_0_var(--foreground)] transition-all duration-300 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[8px_8px_0_var(--foreground)]"
           >
             <div className="mb-5 flex items-center gap-2.5">
               <div className="bg-muted text-muted-foreground flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border">

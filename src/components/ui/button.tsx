@@ -7,7 +7,7 @@ const buttonVariants = cva(
   [
     "group/button inline-flex shrink-0 items-center justify-center",
     "whitespace-nowrap select-none",
-    "rounded-lg border border-transparent bg-clip-padding",
+    "rounded-none border-2 border-transparent bg-clip-padding",
     "text-sm font-medium",
     "transition-[color,background-color,border-color,box-shadow,transform,opacity]",
     "duration-150 ease-out",
@@ -15,8 +15,10 @@ const buttonVariants = cva(
     "outline-none",
     "focus-visible:border-ring",
     "focus-visible:ring-3 focus-visible:ring-ring/50",
-    "active:not-aria-[haspopup]:scale-[0.97]",
-    "active:not-aria-[haspopup]:translate-y-px",
+    "shadow-[4px_4px_0_var(--foreground)]",
+    "active:not-aria-[haspopup]:translate-x-[2px]",
+    "active:not-aria-[haspopup]:translate-y-[2px]",
+    "active:not-aria-[haspopup]:shadow-[2px_2px_0_var(--foreground)]",
     "disabled:pointer-events-none disabled:opacity-40",
     "aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20",
     "dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
@@ -27,14 +29,13 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: [
-          "bg-primary text-primary-foreground",
-          "shadow-[0_1px_2px_hsl(0_0%_0%/0.15)]",
+          "border-foreground bg-primary text-primary-foreground",
           "hover:bg-primary/90",
           "active:not-aria-[haspopup]:bg-primary/80",
         ].join(" "),
 
         outline: [
-          "border-border bg-background text-foreground",
+          "border-foreground bg-background text-foreground",
           "hover:bg-muted hover:text-foreground",
           "aria-expanded:bg-muted aria-expanded:text-foreground",
           "dark:border-input dark:bg-input/30",
@@ -42,13 +43,13 @@ const buttonVariants = cva(
         ].join(" "),
 
         secondary: [
-          "bg-secondary text-secondary-foreground",
+          "border-foreground bg-secondary text-secondary-foreground",
           "hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_7%)]",
           "aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ].join(" "),
 
         ghost: [
-          "hover:bg-muted hover:text-foreground",
+          "border-foreground hover:bg-muted hover:text-foreground",
           "aria-expanded:bg-muted aria-expanded:text-foreground",
           "dark:hover:bg-muted/50",
         ].join(" "),

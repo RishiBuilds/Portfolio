@@ -128,17 +128,17 @@ export function TopInfoBar() {
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="bg-card text-card-foreground border-border flex h-10 w-full items-center justify-between overflow-hidden border-b px-6 font-sans select-none md:px-10 dark:border-white/[0.06] dark:bg-[#050505]"
+      className="bg-accent text-accent-foreground border-foreground flex h-10 w-full items-center justify-between overflow-hidden border-b-2 px-6 font-sans select-none md:px-10"
     >
       <div className="flex items-center gap-2">
-        <span className="text-muted-foreground text-[10px] font-semibold tracking-wider uppercase md:text-xs">
+        <span className="text-accent-foreground/70 text-[10px] font-black tracking-wider uppercase md:text-xs">
           {location.countryCode || "··"}
         </span>
-        <span className="text-foreground/90 font-mono text-xs font-semibold tracking-tight md:text-sm dark:text-zinc-100">
+        <span className="text-accent-foreground font-mono text-xs font-black tracking-tight md:text-sm">
           {time ? formatTime(time) : "--:--"}
         </span>
         {tzAbbr && (
-          <span className="text-muted-foreground hidden text-[9px] font-medium tracking-widest uppercase sm:inline md:text-[10px]">
+          <span className="text-accent-foreground/70 hidden text-[9px] font-bold tracking-widest uppercase sm:inline md:text-[10px]">
             {tzAbbr}
           </span>
         )}
@@ -146,10 +146,10 @@ export function TopInfoBar() {
 
       <div className="group flex cursor-default items-center gap-1.5">
         <Locate
-          className="text-muted-foreground/75 h-3.5 w-3.5 transition-all duration-500 group-hover:scale-110 group-hover:text-emerald-500 dark:group-hover:text-emerald-400"
+          className="text-accent-foreground/70 h-3.5 w-3.5 transition-all duration-500 group-hover:scale-110 group-hover:text-accent-foreground"
           aria-hidden
         />
-        <span className="text-muted-foreground group-hover:text-foreground text-xs font-medium tracking-tight transition-colors duration-300 md:text-sm dark:group-hover:text-white">
+        <span className="text-accent-foreground/80 group-hover:text-accent-foreground text-xs font-bold tracking-tight transition-colors duration-300 md:text-sm">
           {location.city && location.country
             ? `${location.city}, ${location.country}`
             : location.city || location.country || (hasLocation ? "" : "Your location")}

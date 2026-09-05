@@ -246,7 +246,7 @@ export const education: Education[] = [
   {
     school: "Mumbai University",
     degree: "Computer Science & Engineering (AI & ML)",
-    duration: "2024 - 2027",
+    duration: "2025 - 2028",
     logo: "/mumbai-university.png",
   },
 ];

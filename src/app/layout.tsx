@@ -161,7 +161,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <JsonLd />
       </head>
-      <body className="bg-background text-foreground min-h-svh font-sans antialiased">
+      <body className="neo-site bg-background text-foreground min-h-svh font-sans antialiased">
         <ThemeProvider>
           <a href="#main-content" className="skip-link">
             Skip to content

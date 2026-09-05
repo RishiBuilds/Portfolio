@@ -16,7 +16,7 @@ function Card({ className, size = "default", variant = "default", ...props }: Ca
       data-size={size}
       data-variant={variant}
       className={cn(
-        "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl",
+        "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-none",
         "bg-card text-card-foreground text-sm",
         "[--card-spacing:--spacing(4)]",
         "data-[size=sm]:[--card-spacing:--spacing(3)]",
@@ -26,7 +26,7 @@ function Card({ className, size = "default", variant = "default", ...props }: Ca
         "has-[>img:first-child]:pt-0",
         "*:[img:first-child]:rounded-t-xl",
         "*:[img:last-child]:rounded-b-xl",
-        variant === "default" && "ring-foreground/8 shadow-sm ring-1",
+        variant === "default" && "border-2 border-foreground shadow-[5px_5px_0_var(--foreground)]",
         variant === "ghost" && "bg-transparent shadow-none ring-0",
         variant === "outline" && "ring-border bg-transparent shadow-none ring-1",
         variant === "elevated" &&
@@ -37,15 +37,13 @@ function Card({ className, size = "default", variant = "default", ...props }: Ca
           ].join(" "),
         variant === "interactive" &&
           [
-            "ring-foreground/8 shadow-sm ring-1",
+            "border-2 border-foreground shadow-[5px_5px_0_var(--foreground)]",
             "cursor-pointer",
             "transition-[transform,box-shadow,ring-color] duration-200 ease-out",
             "motion-reduce:transition-none",
-            "hover:-translate-y-0.5",
-            "hover:shadow-[0_8px_24px_hsl(0_0%_0%/0.10),0_2px_6px_hsl(0_0%_0%/0.07)]",
-            "hover:ring-foreground/12",
-            "dark:hover:shadow-[0_8px_28px_hsl(0_0%_0%/0.3)]",
-            "active:translate-y-0 active:shadow-sm",
+            "hover:-translate-y-1 hover:-translate-x-1",
+            "hover:shadow-[8px_8px_0_var(--foreground)]",
+            "active:translate-x-0 active:translate-y-0 active:shadow-[2px_2px_0_var(--foreground)]",
             "focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
           ].join(" "),
         className,
